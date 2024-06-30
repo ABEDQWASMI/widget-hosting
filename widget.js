@@ -38,17 +38,19 @@
             border-radius: 10px;
             overflow: hidden;
             position: fixed;
-            bottom: 120px;
-            right: 20px;
+            bottom: 20px;
+            left: 20px;
             display: none; /* Start hidden */
+            z-index: 9999;
         }
         #widget-icon {
             position: fixed;
             bottom: 20px;
-            right: 20px;
+            left: 20px;
             width: 86px;
             height: 88px;
             cursor: pointer;
+            z-index: 9999;
         }
         .finlix-container {
             border-radius: 25px;
@@ -179,8 +181,24 @@
     `;
 
     function loadHTML() {
-        const widgetContainer = document.getElementById('assistant-widget');
+        const widgetContainer = document.createElement('div');
+        widgetContainer.id = 'assistant-widget';
         widgetContainer.innerHTML = widgetHTML;
+        document.body.appendChild(widgetContainer);
+
+        const widgetIcon = document.createElement('div');
+        widgetIcon.id = 'widget-icon';
+        widgetIcon.innerHTML = `
+            <svg width="86" height="88" viewBox="0 0 86 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <ellipse cx="43" cy="44" rx="43" ry="44" fill="black"/>
+                <circle cx="32" cy="35" r="12" fill="#C736D9"/>
+                <circle cx="56" cy="55" r="9" fill="#9AED66"/>
+                <circle cx="37.5" cy="57.5" r="5.5" fill="#D9D9D9"/>
+                <circle cx="53.5" cy="35.5" r="6.5" fill="#BCD8FA"/>
+            </svg>
+        `;
+        widgetIcon.onclick = toggleWidget;
+        document.body.appendChild(widgetIcon);
     }
 
     function loadStyles() {
@@ -278,35 +296,10 @@
 
         window.toggleWidget = function() {
             const widget = document.getElementById('assistant-widget');
-            const widgetIcon = document.getElementById('widget-icon');
-
             if (widget.style.display === 'none' || widget.style.display === '') {
                 widget.style.display = 'flex';
-                widgetIcon.innerHTML = `
-                    <svg width="86" height="88" viewBox="0 0 86 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="43" cy="44" rx="43" ry="44" fill="black"/>
-                        <path d="M43.5 50.5817L28.9465 34.3393C28.5411 33.8869 27.8838 33.8869 27.4785 34.3393L26.304 35.65C25.8987 36.1024 25.8987 36.836 26.304 37.2884L42.766 55.6607C43.1714 56.1131 43.8286 56.1131 44.234 55.6607L60.696 37.2884C61.1013 36.836 61.1013 36.1024 60.696 35.65L59.5215 34.3393C59.1162 33.8869 58.4589 33.8869 58.0535 34.3393L43.5 50.5817Z" fill="url(#paint0_linear_5_74)"/>
-                        <defs>
-                        <linearGradient id="paint0_linear_5_74" x1="43.5" y1="34" x2="43.5" y2="56" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#C736D9"/>
-                            <stop offset="0.5" stop-color="#9AED66"/>
-                            <stop offset="0.75" stop-color="#E9E9EB"/>
-                            <stop offset="1" stop-color="#BCD8FA"/>
-                        </linearGradient>
-                        </defs>
-                    </svg>
-                `;
             } else {
                 widget.style.display = 'none';
-                widgetIcon.innerHTML = `
-                    <svg width="86" height="88" viewBox="0 0 86 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="43" cy="44" rx="43" ry="44" fill="black"/>
-                        <circle cx="32" cy="35" r="12" fill="#C736D9"/>
-                        <circle cx="56" cy="55" r="9" fill="#9AED66"/>
-                        <circle cx="37.5" cy="57.5" r="5.5" fill="#D9D9D9"/>
-                        <circle cx="53.5" cy="35.5" r="6.5" fill="#BCD8FA"/>
-                    </svg>
-                `;
             }
         };
     }
