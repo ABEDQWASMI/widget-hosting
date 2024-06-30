@@ -38,7 +38,7 @@
             border-radius: 10px;
             overflow: hidden;
             position: fixed;
-            bottom: 20px;
+            bottom: 120px;
             right: 20px;
             display: none; /* Start hidden */
             z-index: 9999;
@@ -197,7 +197,9 @@
                 <circle cx="53.5" cy="35.5" r="6.5" fill="#BCD8FA"/>
             </svg>
         `;
-        widgetIcon.onclick = toggleWidget;
+        widgetIcon.onclick = function() {
+            toggleWidget();
+        };
         document.body.appendChild(widgetIcon);
     }
 
