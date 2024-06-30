@@ -39,14 +39,14 @@
             overflow: hidden;
             position: fixed;
             bottom: 20px;
-            left: 20px;
+            right: 20px;
             display: none; /* Start hidden */
             z-index: 9999;
         }
         #widget-icon {
             position: fixed;
             bottom: 20px;
-            left: 20px;
+            right: 20px;
             width: 86px;
             height: 88px;
             cursor: pointer;
