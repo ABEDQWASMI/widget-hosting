@@ -1,160 +1,5 @@
 (function() {
     const widgetHTML = `
-        <style>
-            #assistant-widget {
-                width: 400px;
-                height: 704px;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
-                background-color: #000;
-                color: lightgray;
-                padding: 10px;
-                box-sizing: border-box;
-                border: 1px solid #333;
-                border-radius: 10px;
-                overflow: hidden;
-                position: fixed;
-                bottom: 120px;
-                right: 20px;
-                display: none; /* Start hidden */
-            }
-            #widget-icon {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                width: 86px;
-                height: 88px;
-                cursor: pointer;
-            }
-            .finlix-container {
-                border-radius: 25px;
-                background-color: #000;
-                display: flex;
-                width: 100%;
-                flex-direction: column;
-                align-items: center;
-                padding: 20px;
-                box-sizing: border-box;
-            }
-            .brand-name {
-                justify-content: center;
-                border-radius: 18px;
-                border: 1px solid #c736d9;
-                background-color: rgba(199, 54, 217, 0);
-                color: #fff;
-                white-space: nowrap;
-                padding: 8px 16px;
-                font: 500 14px/140% Inter, sans-serif;
-                margin-top: 10px;
-            }
-            .powered-by {
-                color: #767676;
-                margin-top: 10px;
-                font: 300 12px/140% Inter, sans-serif;
-            }
-            .shape-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-top: 20px;
-                position: relative;
-                width: 100%;
-                height: 300px;
-            }
-            .shape {
-                position: absolute;
-            }
-            .circle {
-                border-radius: 50%;
-                position: absolute;
-            }
-            .purple-circle {
-                background-color: #c736d9;
-                width: 129px;
-                height: 134px;
-                left: calc(50% - 70px);
-                top: calc(50% - 80px);
-            }
-            .blue-circle {
-                background-color: #bcd8fa;
-                width: 68px;
-                height: 68px;
-                left: calc(50% + 30px);
-                top: calc(50% - 100px);
-            }
-            .green-circle {
-                background-color: #9aed66;
-                width: 90px;
-                height: 86px;
-                left: calc(50% + 40px);
-                top: calc(50% + 20px);
-            }
-            .gray-circle {
-                background-color: #d9d9d9;
-                width: 61px;
-                height: 58px;
-                left: calc(50% - 110px);
-                top: calc(50% + 40px);
-            }
-            .question-text {
-                color: #c3c3c3;
-                margin-top: 20px;
-                font: 400 28px/36px Inter, sans-serif;
-                text-align: center;
-            }
-            .icon-container {
-                display: flex;
-                margin-top: 20px;
-                align-items: center;
-                gap: 30px;
-                justify-content: space-around;
-                width: 100%;
-                padding: 20px;
-                position: absolute;
-                bottom: 20px;
-            }
-            .icon {
-                width: 45px;
-                cursor: pointer;
-            }
-            .icon-large {
-                width: 70px;
-                cursor: pointer;
-            }
-            .icon-bordered {
-                width: 45px;
-                cursor: pointer;
-                border-radius: 50%;
-                border: 1px solid #6b6b6b;
-            }
-            .history-box {
-                display: none;
-                position: fixed;
-                bottom: 10%;
-                right: 10%;
-                width: 300px;
-                height: 400px;
-                background-color: #333;
-                color: white;
-                padding: 20px;
-                border-radius: 10px;
-                overflow-y: auto;
-            }
-            .close-button {
-                background-color: #c736d9;
-                border: none;
-                color: white;
-                padding: 5px 10px;
-                cursor: pointer;
-                border-radius: 5px;
-                float: right;
-            }
-            .history-entry {
-                margin-bottom: 10px;
-            }
-        </style>
         <section class="finlix-container">
             <h1 class="brand-name">Finlix</h1>
             <p class="powered-by">Powered by LeapTheLimit</p>
@@ -177,13 +22,177 @@
         </div>
     `;
 
+    const widgetStyles = `
+        #assistant-widget {
+            width: 400px;
+            height: 704px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #000;
+            color: lightgray;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #333;
+            border-radius: 10px;
+            overflow: hidden;
+            position: fixed;
+            bottom: 120px;
+            right: 20px;
+            display: none; /* Start hidden */
+        }
+        #widget-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 86px;
+            height: 88px;
+            cursor: pointer;
+        }
+        .finlix-container {
+            border-radius: 25px;
+            background-color: #000;
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .brand-name {
+            justify-content: center;
+            border-radius: 18px;
+            border: 1px solid #c736d9;
+            background-color: rgba(199, 54, 217, 0);
+            color: #fff;
+            white-space: nowrap;
+            padding: 8px 16px;
+            font: 500 14px/140% Inter, sans-serif;
+            margin-top: 10px;
+        }
+        .powered-by {
+            color: #767676;
+            margin-top: 10px;
+            font: 300 12px/140% Inter, sans-serif;
+        }
+        .shape-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            position: relative;
+            width: 100%;
+            height: 300px;
+        }
+        .shape {
+            position: absolute;
+        }
+        .circle {
+            border-radius: 50%;
+            position: absolute;
+        }
+        .purple-circle {
+            background-color: #c736d9;
+            width: 129px;
+            height: 134px;
+            left: calc(50% - 70px);
+            top: calc(50% - 80px);
+        }
+        .blue-circle {
+            background-color: #bcd8fa;
+            width: 68px;
+            height: 68px;
+            left: calc(50% + 30px);
+            top: calc(50% - 100px);
+        }
+        .green-circle {
+            background-color: #9aed66;
+            width: 90px;
+            height: 86px;
+            left: calc(50% + 40px);
+            top: calc(50% + 20px);
+        }
+        .gray-circle {
+            background-color: #d9d9d9;
+            width: 61px;
+            height: 58px;
+            left: calc(50% - 110px);
+            top: calc(50% + 40px);
+        }
+        .question-text {
+            color: #c3c3c3;
+            margin-top: 20px;
+            font: 400 28px/36px Inter, sans-serif;
+            text-align: center;
+        }
+        .icon-container {
+            display: flex;
+            margin-top: 20px;
+            align-items: center;
+            gap: 30px;
+            justify-content: space-around;
+            width: 100%;
+            padding: 20px;
+            position: absolute;
+            bottom: 20px;
+        }
+        .icon {
+            width: 45px;
+            cursor: pointer;
+        }
+        .icon-large {
+            width: 70px;
+            cursor: pointer;
+        }
+        .icon-bordered {
+            width: 45px;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 1px solid #6b6b6b;
+        }
+        .history-box {
+            display: none;
+            position: fixed;
+            bottom: 10%;
+            right: 10%;
+            width: 300px;
+            height: 400px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+        .close-button {
+            background-color: #c736d9;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            float: right;
+        }
+        .history-entry {
+            margin-bottom: 10px;
+        }
+    `;
+
     function loadHTML() {
         const widgetContainer = document.getElementById('assistant-widget');
         widgetContainer.innerHTML = widgetHTML;
     }
 
+    function loadStyles() {
+        const styleSheet = document.createElement('style');
+        styleSheet.type = 'text/css';
+        styleSheet.innerText = widgetStyles;
+        document.head.appendChild(styleSheet);
+    }
+
     function initWidget() {
         loadHTML();
+        loadStyles();
 
         const serverUrl = 'https://leapthelimit-mz4r7ctc7q-zf.a.run.app';
         const responseText = document.querySelector('.question-text');
