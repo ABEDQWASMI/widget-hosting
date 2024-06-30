@@ -1,24 +1,26 @@
 (function() {
     const widgetHTML = `
-        <section class="finlix-container">
-            <h1 class="brand-name">Finlix</h1>
-            <p class="powered-by">Powered by LeapTheLimit</p>
-            <div class="shape-container">
-                <div class="shape"><div class="circle purple-circle" aria-hidden="true"></div></div>
-                <div class="shape"><div class="circle blue-circle" aria-hidden="true"></div></div>
-                <div class="shape"><div class="circle green-circle" aria-hidden="true"></div></div>
-                <div class="shape"><div class="circle gray-circle" aria-hidden="true"></div></div>
+        <div id="assistant-widget" style="display: none;">
+            <section class="finlix-container">
+                <h1 class="brand-name">Finlix</h1>
+                <p class="powered-by">Powered by LeapTheLimit</p>
+                <div class="shape-container">
+                    <div class="shape"><div class="circle purple-circle" aria-hidden="true"></div></div>
+                    <div class="shape"><div class="circle blue-circle" aria-hidden="true"></div></div>
+                    <div class="shape"><div class="circle green-circle" aria-hidden="true"></div></div>
+                    <div class="shape"><div class="circle gray-circle" aria-hidden="true"></div></div>
+                </div>
+                <h2 class="question-text">What do you know about <span style="color: rgba(195, 195, 195, 1)">Finance?</span></h2>
+                <div class="icon-container">
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b5c24373f8dd5ef5131c67177bccdbef574bf3f9ed5118f4e197ea82589a22df?apiKey=6ff838e322054338a5da6863c2494c61&" alt="History Icon" class="icon" onclick="toggleHistory()" />
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/95dad8e994e6b876df822e962cfc87ce2b5a9d7d32d644beda1bacf1554332cc?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Microphone Icon" class="icon-large" onclick="startListening()" />
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec3ad13fd252c5c0acb23d9fb00ecd75dab04844fe615a32906bc0f2ee5f0f79?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Home Icon" class="icon-bordered" onclick="homePage()" />
+                </div>
+            </section>
+            <div class="history-box" id="historyBox">
+                <button class="close-button" onclick="toggleHistory()">Close</button>
+                <div id="historyContent"></div>
             </div>
-            <h2 class="question-text">What do you know about <span style="color: rgba(195, 195, 195, 1)">Finance?</span></h2>
-            <div class="icon-container">
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b5c24373f8dd5ef5131c67177bccdbef574bf3f9ed5118f4e197ea82589a22df?apiKey=6ff838e322054338a5da6863c2494c61&" alt="History Icon" class="icon" onclick="toggleHistory()" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/95dad8e994e6b876df822e962cfc87ce2b5a9d7d32d644beda1bacf1554332cc?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Microphone Icon" class="icon-large" onclick="startListening()" />
-                <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec3ad13fd252c5c0acb23d9fb00ecd75dab04844fe615a32906bc0f2ee5f0f79?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Home Icon" class="icon-bordered" onclick="homePage()" />
-            </div>
-        </section>
-        <div class="history-box" id="historyBox">
-            <button class="close-button" onclick="toggleHistory()">Close</button>
-            <div id="historyContent"></div>
         </div>
     `;
 
@@ -40,7 +42,6 @@
             position: fixed;
             bottom: 120px;
             right: 20px;
-            display: none; /* Start hidden */
             z-index: 9999;
         }
         #widget-icon {
@@ -298,10 +299,35 @@
 
         window.toggleWidget = function() {
             const widget = document.getElementById('assistant-widget');
+            const widgetIcon = document.getElementById('widget-icon');
+
             if (widget.style.display === 'none' || widget.style.display === '') {
                 widget.style.display = 'flex';
+                widgetIcon.innerHTML = `
+                    <svg width="86" height="88" viewBox="0 0 86 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="43" cy="44" rx="43" ry="44" fill="black"/>
+                        <path d="M43.5 50.5817L28.9465 34.3393C28.5411 33.8869 27.8838 33.8869 27.4785 34.3393L26.304 35.65C25.8987 36.1024 25.8987 36.836 26.304 37.2884L42.766 55.6607C43.1714 56.1131 43.8286 56.1131 44.234 55.6607L60.696 37.2884C61.1013 36.836 61.1013 36.1024 60.696 35.65L59.5215 34.3393C59.1162 33.8869 58.4589 33.8869 58.0535 34.3393L43.5 50.5817Z" fill="url(#paint0_linear_5_74)"/>
+                        <defs>
+                        <linearGradient id="paint0_linear_5_74" x1="43.5" y1="34" x2="43.5" y2="56" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#C736D9"/>
+                            <stop offset="0.5" stop-color="#9AED66"/>
+                            <stop offset="0.75" stop-color="#E9E9EB"/>
+                            <stop offset="1" stop-color="#BCD8FA"/>
+                        </linearGradient>
+                        </defs>
+                    </svg>
+                `;
             } else {
                 widget.style.display = 'none';
+                widgetIcon.innerHTML = `
+                    <svg width="86" height="88" viewBox="0 0 86 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="43" cy="44" rx="43" ry="44" fill="black"/>
+                        <circle cx="32" cy="35" r="12" fill="#C736D9"/>
+                        <circle cx="56" cy="55" r="9" fill="#9AED66"/>
+                        <circle cx="37.5" cy="57.5" r="5.5" fill="#D9D9D9"/>
+                        <circle cx="53.5" cy="35.5" r="6.5" fill="#BCD8FA"/>
+                    </svg>
+                `;
             }
         };
     }
