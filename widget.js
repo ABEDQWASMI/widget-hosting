@@ -17,7 +17,6 @@
             position: fixed;
             bottom: 96px;
             right: 16px;
-            z-index: 1000;  /* Ensures the widget is always on top */
             display: none;
         }
         #widget-icon {
@@ -27,7 +26,6 @@
             width: 69px;
             height: 70px;
             cursor: pointer;
-            z-index: 1001;  /* Ensures the widget icon is always on top */
         }
 
         .breathing {
@@ -78,7 +76,7 @@
             border: 1px solid #666;
             border-radius: 10px;
             padding: 10px;
-            z-index: 1002;
+            z-index: 1000;
         }
 
         .language-menu.active {
@@ -180,18 +178,32 @@
         document.head.appendChild(script);
     }
 
-    function translateMathSymbols(text) {
-        const mathSymbols = {
-            "+": "زائد",
-            "-": "ناقص",
-            "*": "ضرب",
-            "/": "قسمة",
-            "=": "يساوي"
-        };
-        for (const [symbol, word] of Object.entries(mathSymbols)) {
-            text = text.replace(new RegExp(`\\${symbol}`, 'g'), ` ${word} `);
+    async function handleUserMessage(message) {
+        try {
+            history.push({ user: message });
+            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message });
+
+            let response = chatResponse.data.response;
+            response = translateMathSymbols(response);
+            response = convertNumbersToWords(response);
+            displayRotatingText(response);
+            history.push({ bot: response });
+
+            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: 'ar' });
+
+            const audioContent = ttsResponse.data.audioContent;
+            if (audioInstance) {
+                audioInstance.pause();
+                audioInstance = null;
+            }
+            audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+            audioInstance.play();
+
+            await saveChatMessage(message, "general");
+        } catch (error) {
+            console.error('Error handling user message', error);
+            responseText.innerText = 'Error occurred while processing your message.';
         }
-        return text;
     }
 
     function convertNumbersToWords(text) {
@@ -214,28 +226,18 @@
         return text;
     }
 
-    async function handleUserMessage(message) {
-        try {
-            history.push({ user: message });
-            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: currentLanguage });
-
-            let response = chatResponse.data.response;
-            response = translateMathSymbols(response);
-            response = convertNumbersToWords(response);
-            displayRotatingText(response);
-            history.push({ bot: response });
-
-            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: currentLanguage });
-
-            const audioContent = ttsResponse.data.audioContent;
-            audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
-            audioInstance.play();
-
-            await saveChatMessage(message, "general");
-        } catch (error) {
-            console.error('Error handling user message', error);
-            responseText.innerText = 'Error occurred while processing your message.';
+    function translateMathSymbols(text) {
+        const mathSymbols = {
+            "+": "زائد",
+            "-": "ناقص",
+            "*": "ضرب",
+            "/": "قسمة",
+            "=": "يساوي"
+        };
+        for (const [symbol, word] of Object.entries(mathSymbols)) {
+            text = text.replace(new RegExp(`\\${symbol}`, 'g'), ` ${word} `);
         }
+        return text;
     }
 
     function initWidget() {
@@ -416,14 +418,13 @@
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
-        let audioInstance = null;
-        let currentLanguage = 'ar'; // Default language is Arabic
+        let audioInstance;
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = currentLanguage;
+            recognition.lang = 'ar';
 
             recognition.onstart = function() {
                 if (audioInstance) {
@@ -460,20 +461,39 @@
         }
 
         window.startListening = function() {
-            recognition.start();
+            if (recognition) {
+                recognition.stop();
+                recognition.start();
+            }
         };
 
-        window.toggleLanguageMenu = function() {
-            const languageMenu = document.getElementById('languageMenu');
-            languageMenu.classList.toggle('active');
-        };
+        async function handleUserMessage(message) {
+            try {
+                history.push({ user: message });
+                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message });
 
-        window.setLanguage = function(lang) {
-            currentLanguage = lang;
-            recognition.lang = lang;
-            console.log(`Language set to: ${lang}`);
-            toggleLanguageMenu();
-        };
+                let response = chatResponse.data.response;
+                response = translateMathSymbols(response);
+                response = convertNumbersToWords(response);
+                displayRotatingText(response);
+                history.push({ bot: response });
+
+                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: 'ar' });
+
+                const audioContent = ttsResponse.data.audioContent;
+                if (audioInstance) {
+                    audioInstance.pause();
+                    audioInstance = null;
+                }
+                audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+                audioInstance.play();
+
+                await saveChatMessage(message, "general");
+            } catch (error) {
+                console.error('Error handling user message', error);
+                responseText.innerText = 'Error occurred while processing your message.';
+            }
+        }
 
         async function saveChatMessage(message, category) {
             try {
@@ -569,9 +589,18 @@
                 `;
             }
         };
+
+        window.toggleLanguageMenu = function() {
+            const languageMenu = document.getElementById('languageMenu');
+            languageMenu.classList.toggle('active');
+        };
+
+        window.setLanguage = function(lang) {
+            console.log(`Language set to: ${lang}`);
+            // Additional code to handle language change can be added here
+            toggleLanguageMenu();
+        };
     }
 
-    window.onload = function() {
-        loadScript('https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js', initWidget);
-    };
+    loadScript('https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js', initWidget);
 })();
