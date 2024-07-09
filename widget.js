@@ -475,11 +475,11 @@
 
         async function interactiveScrape(url, command) {
             try {
-                const response = await axios.post(`${serverUrl}/interactive-scrape`, { url: url, command: command });
-                const result = response.data.result;
+                const scrapeResponse = await axios.post(`${serverUrl}/interactive-scrape`, { url: url, command: command });
+                const result = scrapeResponse.data.result;
                 handleUserMessage(`Interactive scrape result: ${result}`);
             } catch (error) {
-                console.error('Error in interactive scrape', error);
+                console.error('Error performing interactive scrape', error);
                 alert('Failed to perform interactive scrape.');
             }
         }
