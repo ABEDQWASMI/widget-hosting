@@ -17,8 +17,8 @@
             position: fixed;
             bottom: 96px;
             right: 16px;
+            z-index: 9999; /* Ensure the widget is always on top */
             display: none;
-            z-index: 9999;
         }
         #widget-icon {
             position: fixed;
@@ -27,17 +27,14 @@
             width: 69px;
             height: 70px;
             cursor: pointer;
-            z-index: 9999;
+            z-index: 10000; /* Ensure the widget icon is always on top */
         }
-
         .breathing {
             animation: breathe 3s infinite;
         }
-
         .heartbeat {
             animation: heartbeat 1s infinite;
         }
-
         @keyframes breathe {
             0% {
                 transform: scale(1);
@@ -49,7 +46,6 @@
                 transform: scale(1);
             }
         }
-
         @keyframes heartbeat {
             0% {
                 transform: scale(1);
@@ -97,20 +93,20 @@
                 <div class="icon-container">
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b5c24373f8dd5ef5131c67177bccdbef574bf3f9ed5118f4e197ea82589a22df?apiKey=6ff838e322054338a5da6863c2494c61&" alt="History Icon" class="icon" onclick="toggleHistory()" />
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/95dad8e994e6b876df822e962cfc87ce2b5a9d7d32d644beda1bacf1554332cc?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Microphone Icon" class="icon-large" onclick="startListening()" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec3ad13fd252c5c0acb23d9fb00ecd75dab04844fe615a32906bc0f2ee5f0f79?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Home Icon" class="icon-bordered" onclick="toggleLanguageSelector()" />
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec3ad13fd252c5c0acb23d9fb00ecd75dab04844fe615a32906bc0f2ee5f0f79?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Language Icon" class="icon-bordered" onclick="toggleLanguageMenu()" />
                 </div>
             </section>
             <div class="history-box" id="historyBox">
                 <button class="close-button" onclick="toggleHistory()">Close</button>
                 <div id="historyContent"></div>
             </div>
-            <div class="language-selector" id="languageSelector">
-                <button class="close-button" onclick="toggleLanguageSelector()">Close</button>
-                <div>
-                    <button onclick="setLanguage('ar')">Arabic</button>
-                    <button onclick="setLanguage('en')">English</button>
-                    <button onclick="setLanguage('he')">Hebrew</button>
-                </div>
+            <div class="language-box" id="languageBox" style="display:none;">
+                <button class="close-button" onclick="toggleLanguageMenu()">Close</button>
+                <ul>
+                    <li onclick="setLanguage('ar')">Arabic</li>
+                    <li onclick="setLanguage('en')">English</li>
+                    <li onclick="setLanguage('he')">Hebrew</li>
+                </ul>
             </div>
         </div>
         <div id="widget-icon" onclick="toggleWidget()">
@@ -193,7 +189,7 @@
     async function handleUserMessage(message) {
         try {
             history.push({ user: message });
-            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
+            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message });
 
             let response = chatResponse.data.response;
             response = translateMathSymbols(response);
@@ -201,7 +197,7 @@
             displayRotatingText(response);
             history.push({ bot: response });
 
-            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
+            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: currentLanguage });
 
             const audioContent = ttsResponse.data.audioContent;
             audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
@@ -384,13 +380,12 @@
             .history-entry {
                 margin-bottom: 8px;
             }
-
-            .language-selector {
+            .language-box {
                 display: none;
                 position: fixed;
-                bottom: 20%;
-                right: 10%;
-                width: 200px;
+                bottom: 8%;
+                right: 8%;
+                width: 240px;
                 height: 200px;
                 background-color: #333;
                 color: white;
@@ -398,20 +393,16 @@
                 border-radius: 10px;
                 overflow-y: auto;
             }
-
-            .language-selector button {
-                width: 100%;
-                padding: 10px;
-                margin: 5px 0;
-                background-color: #c736d9;
-                border: none;
-                color: white;
-                cursor: pointer;
-                border-radius: 5px;
+            .language-box ul {
+                list-style: none;
+                padding: 0;
             }
-
-            .language-selector button:hover {
-                background-color: #9aed66;
+            .language-box li {
+                padding: 8px;
+                cursor: pointer;
+            }
+            .language-box li:hover {
+                background-color: #555;
             }
         `;
 
@@ -421,13 +412,13 @@
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
-        let selectedLanguage = 'ar'; // Default language
+        let currentLanguage = 'ar'; // Default language
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = selectedLanguage;
+            recognition.lang = 'ar';
 
             recognition.onstart = function() {
                 if (audioInstance) {
@@ -467,67 +458,6 @@
             recognition.start();
         };
 
-        async function handleUserMessage(message) {
-            try {
-                history.push({ user: message });
-                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
-
-                let response = chatResponse.data.response;
-                response = translateMathSymbols(response);
-                response = convertNumbersToWords(response);
-                displayRotatingText(response);
-                history.push({ bot: response });
-
-                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
-
-                const audioContent = ttsResponse.data.audioContent;
-                audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
-                audioInstance.play();
-
-                await saveChatMessage(message, "general");
-            } catch (error) {
-                console.error('Error handling user message', error);
-                responseText.innerText = 'Error occurred while processing your message.';
-            }
-        }
-
-        async function saveChatMessage(message, category) {
-            try {
-                await axios.post(`${serverUrl}/save-chat-message`, {
-                    message: message,
-                    category: category
-                });
-            } catch (error) {
-                console.error('Error saving chat message', error);
-            }
-        }
-
-        async function scrapeWebsite(url) {
-            try {
-                const scrapeResponse = await axios.post(`${serverUrl}/scrape`, { url: url });
-                const explanation = scrapeResponse.data.explanation;
-                handleUserMessage(`The page says: ${explanation}`);
-            } catch (error) {
-                console.error('Error scraping website', error);
-                alert('Failed to scrape the website.');
-            }
-        }
-
-        function displayRotatingText(text) {
-            const chunks = text.match(/.{1,50}/g);
-            let currentIndex = 0;
-            responseText.innerText = chunks[currentIndex];
-
-            const intervalId = setInterval(() => {
-                currentIndex++;
-                if (currentIndex < chunks.length) {
-                    responseText.innerText = chunks[currentIndex];
-                } else {
-                    clearInterval(intervalId);
-                }
-            }, 6000);
-        }
-
         window.toggleHistory = function() {
             const historyBox = document.getElementById('historyBox');
             const historyContent = document.getElementById('historyContent');
@@ -548,20 +478,8 @@
             }
         };
 
-        window.toggleLanguageSelector = function() {
-            const languageSelector = document.getElementById('languageSelector');
-
-            if (languageSelector.style.display === 'none' || languageSelector.style.display === '') {
-                languageSelector.style.display = 'block';
-            } else {
-                languageSelector.style.display = 'none';
-            }
-        };
-
-        window.setLanguage = function(language) {
-            selectedLanguage = language;
-            recognition.lang = selectedLanguage;
-            toggleLanguageSelector();
+        window.homePage = function() {
+            toggleLanguageMenu(); // Open language selection menu when home icon is clicked
         };
 
         window.toggleWidget = function() {
@@ -596,6 +514,21 @@
                     </svg>
                 `;
             }
+        };
+
+        window.toggleLanguageMenu = function() {
+            const languageBox = document.getElementById('languageBox');
+            if (languageBox.style.display === 'none' || languageBox.style.display === '') {
+                languageBox.style.display = 'block';
+            } else {
+                languageBox.style.display = 'none';
+            }
+        };
+
+        window.setLanguage = function(lang) {
+            currentLanguage = lang;
+            recognition.lang = lang;
+            toggleLanguageMenu();
         };
     }
 
