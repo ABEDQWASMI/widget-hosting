@@ -17,8 +17,8 @@
             position: fixed;
             bottom: 96px;
             right: 16px;
-            z-index: 9999; /* Ensure the widget is always on top */
             display: none;
+            z-index: 9999; /* Ensure widget is always on top */
         }
         #widget-icon {
             position: fixed;
@@ -27,6 +27,7 @@
             width: 69px;
             height: 70px;
             cursor: pointer;
+            z-index: 9999; /* Ensure widget icon is always on top */
         }
 
         .breathing {
@@ -127,6 +128,7 @@
                 <div class="icon-container">
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b5c24373f8dd5ef5131c67177bccdbef574bf3f9ed5118f4e197ea82589a22df?apiKey=6ff838e322054338a5da6863c2494c61&" alt="History Icon" class="icon" onclick="toggleHistory()" />
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/95dad8e994e6b876df822e962cfc87ce2b5a9d7d32d644beda1bacf1554332cc?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Microphone Icon" class="icon-large" onclick="startListening()" />
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec3ad13fd252c5c0acb23d9fb00ecd75dab04844fe615a32906bc0f2ee5f0f79?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Home Icon" class="icon-bordered" onclick="homePage()" />
                     <svg width="29" height="132" viewBox="0 0 29 132" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon" onclick="toggleLanguageMenu()">
                         <rect x="0.25" y="103.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
                         <rect x="0.25" y="103.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
@@ -143,10 +145,18 @@
                         <rect x="0.25" y="34.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
                         <rect x="0.25" y="34.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
                         <rect x="0.25" y="34.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
+                        <rect x="0.25" y="34.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="34.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
+                        <rect x="0.25" y="34.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="34.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
                         <path d="M7.15909 87V78.2727H12.2216V78.9886H7.95597V82.2741H11.9531V82.9901H7.95597V86.2841H12.3068V87H7.15909ZM21.081 78.2727V87H20.3054L15.1491 79.6918H15.081V87H14.2841V78.2727H15.0554L20.2287 85.5895H20.2969V78.2727H21.081Z" fill="white"/>
                         <path d="M10.68 53.252L10.992 52.268C11.928 52.268 12.732 52.244 13.404 52.196C14.084 52.148 14.64 52.072 15.072 51.968C15.512 51.856 15.836 51.708 16.044 51.524C16.26 51.332 16.368 51.1 16.368 50.828C16.368 50.524 16.312 50.172 16.2 49.772C16.088 49.372 15.944 48.944 15.768 48.488L16.692 48.164C16.796 48.42 16.892 48.696 16.98 48.992C17.076 49.28 17.156 49.568 17.22 49.856C17.284 50.136 17.316 50.396 17.316 50.636C17.316 51.108 17.208 51.512 16.992 51.848C16.776 52.176 16.416 52.444 15.912 52.652C15.408 52.86 14.728 53.012 13.872 53.108C13.024 53.204 11.96 53.252 10.68 53.252ZM10.68 53.252C9.968 53.252 9.34 53.204 8.796 53.108C8.26 53.02 7.812 52.88 7.452 52.688C7.092 52.496 6.82 52.248 6.636 51.944C6.452 51.632 6.36 51.256 6.36 50.816C6.36 50.616 6.376 50.412 6.408 50.204C6.44 49.988 6.48 49.772 6.528 49.556C6.584 49.34 6.64 49.132 6.696 48.932L7.596 49.16C7.564 49.28 7.528 49.424 7.488 49.592C7.448 49.752 7.412 49.916 7.38 50.084C7.356 50.252 7.344 50.404 7.344 50.54C7.344 50.956 7.448 51.292 7.656 51.548C7.872 51.796 8.244 51.98 8.772 52.1C9.3 52.212 10.04 52.268 10.992 52.268L11.232 52.868L10.68 53.252ZM11.832 55.532C11.664 55.532 11.52 55.472 11.4 55.352C11.288 55.24 11.232 55.104 11.232 54.944C11.232 54.784 11.288 54.644 11.4 54.524C11.52 54.404 11.664 54.344 11.832 54.344C11.992 54.344 12.128 54.404 12.24 54.524C12.36 54.644 12.42 54.784 12.42 54.944C12.42 55.104 12.36 55.24 12.24 55.352C12.128 55.472 11.992 55.532 11.832 55.532ZM18.986 53L18.782 45.272H19.754L19.958 53H18.986ZM18.194 44.552L18.05 43.904C18.258 43.856 18.426 43.816 18.554 43.784C18.682 43.752 18.826 43.716 18.986 43.676L18.926 43.928C18.718 43.864 18.518 43.728 18.326 43.52C18.142 43.312 18.05 43.076 18.05 42.812C18.05 42.572 18.106 42.372 18.218 42.212C18.338 42.044 18.49 41.92 18.674 41.84C18.866 41.76 19.07 41.72 19.286 41.72C19.374 41.72 19.466 41.728 19.562 41.744C19.666 41.76 19.762 41.784 19.85 41.816L19.754 42.416C19.674 42.4 19.598 42.384 19.526 42.368C19.454 42.352 19.374 42.344 19.286 42.344C19.102 42.344 18.958 42.384 18.854 42.464C18.75 42.536 18.698 42.64 18.698 42.776C18.698 42.944 18.75 43.088 18.854 43.208C18.966 43.328 19.09 43.424 19.226 43.496C19.37 43.56 19.486 43.592 19.574 43.592L19.082 43.64C19.298 43.584 19.498 43.528 19.682 43.472C19.874 43.408 20.046 43.348 20.198 43.292L20.39 43.904C20.198 43.976 19.97 44.052 19.706 44.132C19.45 44.212 19.19 44.288 18.926 44.36C18.662 44.432 18.418 44.496 18.194 44.552Z" fill="white"/>
 <path d="M13.7559 18.0039V19H7.48047V18.0039H11.8984V14.7754C11.8984 14.0566 11.752 13.5488 11.459 13.252C11.1699 12.9551 10.668 12.8066 9.95312 12.8066H7.75586V11.8105H9.96484C11.043 11.8105 11.8145 12.041 12.2793 12.502C12.7441 12.9629 12.9766 13.7246 12.9766 14.7871V18.0039H13.7559ZM14.4238 18.0508C15.5059 18.0508 16.3535 17.9512 16.9668 17.752L14.793 11.8105H15.9824L17.9043 17.2949C18.2715 17.0332 18.5664 16.6836 18.7891 16.2461C19.0156 15.8047 19.1797 15.2266 19.2812 14.5117C19.3867 13.7969 19.4395 12.8965 19.4395 11.8105H20.5703C20.5703 13.6152 20.3789 15.0293 19.9961 16.0527C19.7383 16.7324 19.377 17.2949 18.9121 17.7402C18.4473 18.1816 17.8477 18.5215 17.1133 18.7598C16.3828 18.9941 15.4863 19.1387 14.4238 19.1934V18.0508Z" fill="white"/>
-</svg>
+                    </svg>
                 </div>
             </section>
             <div class="history-box" id="historyBox">
@@ -189,292 +199,51 @@
         document.head.appendChild(script);
     }
 
-    async function handleUserMessage(message) {
-        try {
-            history.push({ user: message });
-            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: recognition.lang });
-
-            let response = chatResponse.data.response;
-            response = translateMathSymbols(response);
-            response = convertNumbersToWords(response);
-            displayRotatingText(response);
-            history.push({ bot: response });
-
-            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: recognition.lang });
-
-            const audioContent = ttsResponse.data.audioContent;
-            const audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
-            audioInstance.play();
-
-            startSpeaking(audioInstance);
-
-            await saveChatMessage(message, "general");
-        } catch (error) {
-            console.error('Error handling user message', error);
-            responseText.innerText = 'Error occurred while processing your message.';
-        }
-    }
-
-    function startSpeaking(audioInstance) {
-        document.querySelectorAll('.circle').forEach(circle => {
-            circle.classList.add('wave');
-        });
-        audioInstance.onended = () => {
-            document.querySelectorAll('.circle').forEach(circle => {
-                circle.classList.remove('wave');
-            });
-        };
-    }
-
-    function translateMathSymbols(text) {
-        const mathSymbols = {
-            "+": "زائد",
-            "-": "ناقص",
-            "*": "ضرب",
-            "/": "قسمة",
-            "=": "يساوي"
-        };
-        for (const [symbol, word] of Object.entries(mathSymbols)) {
-            text = text.replace(new RegExp(`\\${symbol}`, 'g'), ` ${word} `);
-        }
-        return text;
-    }
-
     function convertNumberToWords(num) {
         const units = ["", "واحد", "اثنان", "ثلاثة", "أربعة", "خمسة", "ستة", "سبعة", "ثمانية", "تسعة"];
         const teens = ["عشرة", "أحد عشر", "اثنا عشر", "ثلاثة عشر", "أربعة عشر", "خمسة عشر", "ستة عشر", "سبعة عشر", "ثمانية عشر", "تسعة عشر"];
         const tens = ["", "عشر", "عشرون", "ثلاثون", "أربعون", "خمسون", "ستون", "سبعون", "ثمانون", "تسعون"];
         const hundreds = ["", "مئة", "مئتان", "ثلاثمئة", "أربعمئة", "خمسمئة", "ستمئة", "سبعمئة", "ثمانمئة", "تسعمئة"];
-        const thousands = ["", "ألف", "ألفان", "ثلاثة آلاف", "أربعة آلاف", "خمسة آلاف", "ستة آلاف", "سبعة آلاف", "ثمانية آلاف", "تسعة آلاف"];
 
-        let words = [];
-        if (num >= 1000) {
-            words.push(thousands[Math.floor(num / 1000)]);
-            num %= 1000;
-        }
+        if (num === 0) return "صفر";
+
+        let words = "";
         if (num >= 100) {
-            words.push(hundreds[Math.floor(num / 100)]);
+            words += hundreds[Math.floor(num / 100)] + " ";
             num %= 100;
         }
         if (num >= 20) {
-            words.push(tens[Math.floor(num / 10)]);
+            words += tens[Math.floor(num / 10)] + " ";
             num %= 10;
         }
         if (num >= 10) {
-            words.push(teens[num - 10]);
-        } else if (num > 0) {
-            words.push(units[num]);
+            words += teens[num - 10] + " ";
+        } else {
+            words += units[num] + " ";
         }
-        return words.filter(Boolean).join(" و ");
+        return words.trim();
     }
 
-    function convertNumbersToWords(text) {
-        return text.replace(/\d+/g, match => convertNumberToWords(parseInt(match)));
+    function translateMathSymbols(text) {
+        const symbols = {
+            '+': 'زائد',
+            '-': 'ناقص',
+            '*': 'ضرب',
+            '/': 'قسمة',
+            '=': 'يساوي'
+        };
+        return text.replace(/[+\-*/=]/g, match => symbols[match]);
     }
 
-    function initWidget() {
+    function loadWidget() {
         loadStyles(widgetStyles);
         loadHTML(widgetHTML);
-
-        const cssStyles = `
-            .finlix-container {
-                border-radius: 25px;
-                background-color: #000;
-                display: flex;
-                width: 100%;
-                flex-direction: column;
-                align-items: center;
-                padding: 16px;
-                box-sizing: border-box;
-            }
-
-            .brand-name {
-                justify-content: center;
-                border-radius: 18px;
-                border: none;
-                background-color: rgba(199, 54, 217, 0);
-                color: #fff;
-                white-space: nowrap;
-                padding: 6.4px 12.8px;
-                font: 500 11.2px/112% Inter, sans-serif;
-                margin-top: 8px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .brand-name svg {
-                display: inline-block;
-                vertical-align: middle;
-            }
-
-            .powered-by {
-                color: #767676;
-                margin-top: 8px;
-                font: 300 9.6px/112% Inter, sans-serif;
-            }
-
-            .powered-by a {
-                color: #767676;
-                text-decoration: none;
-            }
-
-            .powered-by a:hover {
-                text-decoration: underline;
-            }
-
-            .shape-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-top: 16px;
-                position: relative;
-                width: 100%;
-                height: 240px;
-            }
-
-            .shape {
-                position: absolute;
-            }
-
-            .circle {
-                border-radius: 50%;
-                position: absolute;
-                animation: breathe 3s infinite;
-            }
-
-            .circle-listening {
-                animation: heartbeat 1s infinite;
-            }
-
-            .purple-circle {
-                background-color: #c736d9;
-                width: 103.2px;
-                height: 107.2px;
-                left: calc(50% - 84px);
-                top: calc(50% - 80px);
-            }
-
-            .blue-circle {
-                background-color: #bcd8fa;
-                width: 54.4px;
-                height: 54.4px;
-                left: calc(50% + 32px);
-                top: calc(50% - 64px);
-            }
-
-            .green-circle {
-                background-color: #9aed66;
-                width: 72px;
-                height: 68.8px;
-                left: calc(50% + 16px);
-                top: calc(50% + 8px);
-            }
-
-            .gray-circle {
-                background-color: #d9d9d9;
-                width: 48.8px;
-                height: 46.4px;
-                left: calc(50% - 48px);
-                top: calc(64% + 40px);
-            }
-
-            .question-text {
-                color: #c3c3c3;
-                margin-top: 16px;
-                font: 400 22.4px/28.8px Inter, sans-serif;
-                text-align: center;
-            }
-
-            .icon-container {
-                display: flex;
-                margin-top: 16px;
-                align-items: center;
-                gap: 24px;
-                justify-content: space-around;
-                width: 100%;
-                padding: 16px;
-                position: absolute;
-                bottom: 16px;
-            }
-
-            .icon {
-                width: 36px;
-                cursor: pointer;
-            }
-
-            .icon-large {
-                width: 56px;
-                cursor: pointer;
-            }
-
-            .icon-bordered {
-                width: 36px;
-                cursor: pointer;
-                border-radius: 50%;
-                border: 1px solid #6b6b6b;
-            }
-
-            .history-box {
-                display: none;
-                position: fixed;
-                bottom: 8%;
-                right: 8%;
-                width: 240px;
-                height: 320px;
-                background-color: #333;
-                color: white;
-                padding: 16px;
-                border-radius: 10px;
-                overflow-y: auto;
-            }
-
-            .close-button {
-                background-color: #c736d9;
-                border: none;
-                color: white;
-                padding: 4px 8px;
-                cursor: pointer;
-                border-radius: 5px;
-                float: right;
-            }
-
-            .language-menu {
-                display: none;
-                position: fixed;
-                bottom: 8%;
-                right: 8%;
-                width: 240px;
-                background-color: #333;
-                color: white;
-                padding: 16px;
-                border-radius: 10px;
-                overflow-y: auto;
-                z-index: 1000;
-            }
-
-            .language-menu button {
-                background-color: #272626;
-                border: 1px solid #6b6b6b;
-                color: white;
-                padding: 8px;
-                margin-bottom: 8px;
-                cursor: pointer;
-                width: 100%;
-                border-radius: 5px;
-            }
-
-            .history-entry {
-                margin-bottom: 8px;
-            }
-        `;
-
-        loadStyles(cssStyles);
 
         const serverUrl = 'https://leapthelimit-mz4r7ctc7q-zf.a.run.app';
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
+        let audioInstance;
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
@@ -519,6 +288,69 @@
         window.startListening = function() {
             recognition.start();
         };
+
+        async function handleUserMessage(message) {
+            try {
+                history.push({ user: message });
+                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message });
+
+                let response = chatResponse.data.response;
+                response = translateMathSymbols(response);
+                response = convertNumberToWords(response);
+                displayRotatingText(response);
+                history.push({ bot: response });
+
+                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: 'ar-SA' });
+
+                const audioContent = ttsResponse.data.audioContent;
+                audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+                audioInstance.play();
+
+                startSpeaking();
+
+                await saveChatMessage(message, "general");
+            } catch (error) {
+                console.error('Error handling user message', error);
+                responseText.innerText = 'Error occurred while processing your message.';
+            }
+        }
+
+        async function saveChatMessage(message, category) {
+            try {
+                await axios.post(`${serverUrl}/save-chat-message`, {
+                    message: message,
+                    category: category
+                });
+            } catch (error) {
+                console.error('Error saving chat message', error);
+            }
+        }
+
+        async function scrapeWebsite(url) {
+            try {
+                const scrapeResponse = await axios.post(`${serverUrl}/scrape`, { url: url });
+                const explanation = scrapeResponse.data.explanation;
+                handleUserMessage(`The page says: ${explanation}`);
+            } catch (error) {
+                console.error('Error scraping website', error);
+                alert('Failed to scrape the website.');
+            }
+        }
+
+        function displayRotatingText(text) {
+            const chunks = text.match(/.{1,50}/g);
+            let currentIndex = 0;
+            responseText.innerText = chunks[currentIndex];
+
+            const intervalId = setInterval(() => {
+                currentIndex++;
+                if (currentIndex < chunks.length) {
+                    responseText.innerText = chunks[currentIndex];
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, 6000);
+        }
 
         window.toggleHistory = function() {
             const historyBox = document.getElementById('historyBox');
@@ -594,5 +426,5 @@
         };
     }
 
-    loadScript('https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js', initWidget);
+    loadScript('https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js', loadWidget);
 })();
