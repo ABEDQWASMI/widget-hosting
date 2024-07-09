@@ -406,7 +406,7 @@
             }
         `;
 
-       loadStyles(cssStyles);
+        loadStyles(cssStyles);
 
         const serverUrl = 'https://my-flask-app-mz4r7ctc7q-zf.a.run.app';
         const responseText = document.querySelector('.question-text');
@@ -458,16 +458,89 @@
             recognition.start();
         };
 
-        window.setLanguage = function(lang) {
-            console.log(`Language set to: ${lang}`);
-            currentLanguage = lang;
-            recognition.lang = lang;
-            toggleLanguageMenu();
+        async function handleUserMessage(message) {
+            try {
+                history.push({ user: message });
+                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: currentLanguage });
+
+                let response = chatResponse.data.response;
+                response = translateMathSymbols(response);
+                response = convertNumbersToWords(response);
+                displayRotatingText(response);
+                history.push({ bot: response });
+
+                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: currentLanguage });
+
+                const audioContent = ttsResponse.data.audioContent;
+                audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+                audioInstance.play();
+
+                await saveChatMessage(message, "general");
+            } catch (error) {
+                console.error('Error handling user message', error);
+                responseText.innerText = 'Error occurred while processing your message.';
+            }
+        }
+
+        async function saveChatMessage(message, category) {
+            try {
+                await axios.post(`${serverUrl}/save-chat-message`, {
+                    message: message,
+                    category: category
+                });
+            } catch (error) {
+                console.error('Error saving chat message', error);
+            }
+        }
+
+        async function scrapeWebsite(url) {
+            try {
+                const scrapeResponse = await axios.post(`${serverUrl}/scrape`, { url: url });
+                const explanation = scrapeResponse.data.explanation;
+                handleUserMessage(`The page says: ${explanation}`);
+            } catch (error) {
+                console.error('Error scraping website', error);
+                alert('Failed to scrape the website.');
+            }
+        }
+
+        function displayRotatingText(text) {
+            const chunks = text.match(/.{1,50}/g);
+            let currentIndex = 0;
+            responseText.innerText = chunks[currentIndex];
+
+            const intervalId = setInterval(() => {
+                currentIndex++;
+                if (currentIndex < chunks.length) {
+                    responseText.innerText = chunks[currentIndex];
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, 6000);
+        }
+
+        window.toggleHistory = function() {
+            const historyBox = document.getElementById('historyBox');
+            const historyContent = document.getElementById('historyContent');
+
+            if (historyBox.style.display === 'none' || historyBox.style.display === '') {
+                let historyHtml = history.map(entry => {
+                    if (entry.user) {
+                        return `<div class="history-entry">User: ${entry.user}</div>`;
+                    } else if (entry.bot) {
+                        return `<div class="history-entry">Bot: ${entry.bot}</div>`;
+                    }
+                }).join('');
+
+                historyContent.innerHTML = historyHtml;
+                historyBox.style.display = 'block';
+            } else {
+                historyBox.style.display = 'none';
+            }
         };
 
-        window.toggleLanguageMenu = function() {
-            const languageMenu = document.getElementById('languageMenu');
-            languageMenu.classList.toggle('active');
+        window.homePage = function() {
+            alert("Coming Soon");
         };
 
         window.toggleWidget = function() {
@@ -502,6 +575,18 @@
                     </svg>
                 `;
             }
+        };
+
+        window.setLanguage = function(lang) {
+            console.log(`Language set to: ${lang}`);
+            currentLanguage = lang;
+            recognition.lang = lang;
+            toggleLanguageMenu();
+        };
+
+        window.toggleLanguageMenu = function() {
+            const languageMenu = document.getElementById('languageMenu');
+            languageMenu.classList.toggle('active');
         };
     }
 
