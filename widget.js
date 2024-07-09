@@ -158,7 +158,7 @@
         </div>
     `;
 
-    function loadStyles(styles) {
+       function loadStyles(styles) {
         const styleSheet = document.createElement('style');
         styleSheet.type = 'text/css';
         styleSheet.innerText = styles;
@@ -192,7 +192,7 @@
             const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
 
             const audioContent = ttsResponse.data.audioContent;
-            const audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+            audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
             audioInstance.play();
 
             await saveChatMessage(message, "general");
@@ -239,6 +239,7 @@
     function initWidget() {
         loadStyles(widgetStyles);
         loadHTML(widgetHTML);
+  
 
         const cssStyles = `
             .finlix-container {
@@ -408,19 +409,20 @@
             }
         `;
 
-        loadStyles(cssStyles);
+                loadStyles(cssStyles);
 
         const serverUrl = 'https://my-flask-app-mz4r7ctc7q-zf.a.run.app';
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
+        let audioInstance;
         let selectedLanguage = 'ar';
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = 'ar';
+            recognition.lang = 'ar-SA';
 
             recognition.onstart = function() {
                 if (audioInstance) {
@@ -474,7 +476,7 @@
                 const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
 
                 const audioContent = ttsResponse.data.audioContent;
-                const audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+                audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
                 audioInstance.play();
 
                 await saveChatMessage(message, "general");
@@ -585,9 +587,9 @@
         };
 
         window.setLanguage = function(lang) {
-            console.log(`Language set to: ${lang}`);
             selectedLanguage = lang;
-            recognition.lang = lang === 'ar' ? 'ar-SA' : (lang === 'he' ? 'he-IL' : 'en-US');
+            console.log(`Language set to: ${lang}`);
+            recognition.lang = lang === 'en' ? 'en-US' : lang === 'he' ? 'he-IL' : 'ar-SA';
             toggleLanguageMenu();
         };
     }
