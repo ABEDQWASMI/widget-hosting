@@ -17,8 +17,8 @@
             position: fixed;
             bottom: 96px;
             right: 16px;
-            z-index: 9999;
             display: none;
+            z-index: 1000;
         }
         #widget-icon {
             position: fixed;
@@ -27,7 +27,7 @@
             width: 69px;
             height: 70px;
             cursor: pointer;
-            z-index: 9999;
+            z-index: 1001;
         }
 
         .breathing {
@@ -36,10 +36,6 @@
 
         .heartbeat {
             animation: heartbeat 1s infinite;
-        }
-
-        .wave {
-            animation: wave 2s infinite;
         }
 
         @keyframes breathe {
@@ -72,31 +68,35 @@
             }
         }
 
-        @keyframes wave {
-            0%, 100% {
-                transform: scale(1);
-                border-radius: 50%;
-            }
-            50% {
-                transform: scale(1.1);
-                border-radius: 45%;
-            }
+        .language-menu {
+            position: absolute;
+            top: 50px;
+            right: 10px;
+            display: none;
+            flex-direction: column;
+            background-color: #333;
+            border: 1px solid #666;
+            border-radius: 10px;
+            padding: 10px;
+            z-index: 1000;
         }
 
-        .purple-wave {
-            background-color: #c736d9;
+        .language-menu.active {
+            display: flex;
         }
 
-        .blue-wave {
-            background-color: #bcd8fa;
+        .language-menu button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            text-align: left;
+            cursor: pointer;
+            width: 100%;
         }
 
-        .green-wave {
-            background-color: #9aed66;
-        }
-
-        .gray-wave {
-            background-color: #d9d9d9;
+        .language-menu button:hover {
+            background-color: #555;
         }
     `;
 
@@ -128,24 +128,23 @@
                 <div class="icon-container">
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b5c24373f8dd5ef5131c67177bccdbef574bf3f9ed5118f4e197ea82589a22df?apiKey=6ff838e322054338a5da6863c2494c61&" alt="History Icon" class="icon" onclick="toggleHistory()" />
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/95dad8e994e6b876df822e962cfc87ce2b5a9d7d32d644beda1bacf1554332cc?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Microphone Icon" class="icon-large" onclick="startListening()" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec3ad13fd252c5c0acb23d9fb00ecd75dab04844fe615a32906bc0f2ee5f0f79?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Close Icon" class="icon-bordered" onclick="closeWidget()" />
-                    <svg width="29" height="132" viewBox="0 0 29 132" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon" onclick="toggleLanguageMenu()">
-                        <rect x="0.25" y="103.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
-                        <rect x="0.25" y="103.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
-                        <path d="M14.5 126.167C19.3325 126.167 23.25 122.063 23.25 117C23.25 111.937 19.3325 107.833 14.5 107.833C9.66751 107.833 5.75 111.937 5.75 117C5.75 122.063 9.66751 126.167 14.5 126.167Z" stroke="white" stroke-linecap="square"/>
-                        <path d="M14.5 126.167C16.8333 123.944 18 120.889 18 117C18 113.111 16.8333 110.056 14.5 107.833C12.1667 110.056 11 113.111 11 117C11 120.889 12.1667 123.944 14.5 126.167Z" stroke="white" stroke-linecap="round"/>
-                        <path d="M6.1875 114.25H22.8125M6.1875 119.75H22.8125" stroke="white" stroke-linecap="round"/>
+                    <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon" onclick="toggleLanguageMenu()">
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
+                        <path d="M14.5 23.1667C19.3325 23.1667 23.25 19.0626 23.25 14C23.25 8.9374 19.3325 4.83334 14.5 4.83334C9.66751 4.83334 5.75 8.9374 5.75 14C5.75 19.0626 9.66751 23.1667 14.5 23.1667Z" stroke="white" stroke-linecap="square"/>
+                        <path d="M14.5 23.1667C16.8333 20.9445 18 17.8889 18 14C18 10.1111 16.8333 7.05557 14.5 4.83334C12.1667 7.05557 11 10.1111 11 14C11 17.8889 12.1667 20.9445 14.5 23.1667Z" stroke="white" stroke-linecap="round"/>
+                        <path d="M6.1875 11.25H22.8125M6.1875 16.75H22.8125" stroke="white" stroke-linecap="round"/>
                     </svg>
+                </div>
+                <div class="language-menu" id="languageMenu">
+                    <button onclick="setLanguage('ar')">Arabic</button>
+                    <button onclick="setLanguage('en')">English</button>
+                    <button onclick="setLanguage('he')">Hebrew</button>
                 </div>
             </section>
             <div class="history-box" id="historyBox">
                 <button class="close-button" onclick="toggleHistory()">Close</button>
                 <div id="historyContent"></div>
-            </div>
-            <div class="language-menu" id="languageMenu" style="display: none;">
-                <button onclick="setLanguage('ar')">عرب</button>
-                <button onclick="setLanguage('en')">EN</button>
-                <button onclick="setLanguage('he')">עב</button>
             </div>
         </div>
         <div id="widget-icon" onclick="toggleWidget()">
@@ -179,89 +178,26 @@
         document.head.appendChild(script);
     }
 
-    let audioInstance;
-
-    function translateMathSymbols(text) {
-        const mathSymbols = {
-            "+": "زائد",
-            "-": "ناقص",
-            "*": "ضرب",
-            "/": "قسمة",
-            "=": "يساوي"
-        };
-        for (const [symbol, word] of Object.entries(mathSymbols)) {
-            text = text.replace(new RegExp(`\\${symbol}`, 'g'), ` ${word} `);
-        }
-        return text;
-    }
-
-    function convertNumberToWords(num) {
-        const units = ["", "واحد", "اثنان", "ثلاثة", "أربعة", "خمسة", "ستة", "سبعة", "ثمانية", "تسعة"];
-        const teens = ["عشرة", "أحد عشر", "اثنا عشر", "ثلاثة عشر", "أربعة عشر", "خمسة عشر", "ستة عشر", "سبعة عشر", "ثمانية عشر", "تسعة عشر"];
-        const tens = ["", "عشر", "عشرون", "ثلاثون", "أربعون", "خمسون", "ستون", "سبعون", "ثمانون", "تسعون"];
-        const hundreds = ["", "مئة", "مئتان", "ثلاثمئة", "أربعمئة", "خمسمئة", "ستمئة", "سبعمئة", "ثمانمئة", "تسعمئة"];
-        const thousands = ["", "ألف", "ألفان", "ثلاثة آلاف", "أربعة آلاف", "خمسة آلاف", "ستة آلاف", "سبعة آلاف", "ثمانية آلاف", "تسعة آلاف"];
-
-        let words = [];
-        if (num >= 1000) {
-            words.push(thousands[Math.floor(num / 1000)]);
-            num %= 1000;
-        }
-        if (num >= 100) {
-            words.push(hundreds[Math.floor(num / 100)]);
-            num %= 100;
-        }
-        if (num >= 20) {
-            words.push(tens[Math.floor(num / 10)]);
-            num %= 10;
-        }
-        if (num >= 10) {
-            words.push(teens[num - 10]);
-        } else if (num > 0) {
-            words.push(units[num]);
-        }
-        return words.filter(Boolean).join(" و ");
-    }
-
-    function convertNumbersToWords(text) {
-        return text.replace(/\d+/g, match => convertNumberToWords(parseInt(match)));
-    }
-
     async function handleUserMessage(message) {
         try {
             history.push({ user: message });
-            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: currentLanguage });
+            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: recognition.lang });
 
             let response = chatResponse.data.response;
-            response = translateMathSymbols(response);
-            response = convertNumbersToWords(response);
             displayRotatingText(response);
             history.push({ bot: response });
 
-            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: currentLanguage });
+            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: recognition.lang });
 
             const audioContent = ttsResponse.data.audioContent;
-            audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+            const audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
             audioInstance.play();
-
-            startSpeaking();
 
             await saveChatMessage(message, "general");
         } catch (error) {
             console.error('Error handling user message', error);
             responseText.innerText = 'Error occurred while processing your message.';
         }
-    }
-
-    function startSpeaking() {
-        document.querySelectorAll('.circle').forEach(circle => {
-            circle.classList.add('wave');
-        });
-        audioInstance.onended = () => {
-            document.querySelectorAll('.circle').forEach(circle => {
-                circle.classList.remove('wave');
-            });
-        };
     }
 
     function initWidget() {
@@ -431,31 +367,6 @@
                 float: right;
             }
 
-            .language-menu {
-                display: none;
-                position: fixed;
-                bottom: 8%;
-                right: 8%;
-                width: 240px;
-                background-color: #333;
-                color: white;
-                padding: 16px;
-                border-radius: 10px;
-                overflow-y: auto;
-                z-index: 1000;
-            }
-
-            .language-menu button {
-                background-color: #272626;
-                border: 1px solid #6b6b6b;
-                color: white;
-                padding: 8px;
-                margin-bottom: 8px;
-                cursor: pointer;
-                width: 100%;
-                border-radius: 5px;
-            }
-
             .history-entry {
                 margin-bottom: 8px;
             }
@@ -463,17 +374,17 @@
 
         loadStyles(cssStyles);
 
-        const serverUrl = 'https://leapthelimit-mz4r7ctc7q-zf.a.run.app';
+        const serverUrl = 'https://my-flask-app-mz4r7ctc7q-zf.a.run.app';
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
-        let currentLanguage = 'ar';
+        let audioInstance = null;
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = currentLanguage;
+            recognition.lang = 'ar';
 
             recognition.onstart = function() {
                 if (audioInstance) {
@@ -510,17 +421,13 @@
         }
 
         window.startListening = function() {
-            try {
-                recognition.start();
-            } catch (error) {
-                console.error('Speech recognition start error:', error);
-            }
+            recognition.start();
         };
 
         async function handleUserMessage(message) {
             try {
                 history.push({ user: message });
-                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: currentLanguage });
+                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: recognition.lang });
 
                 let response = chatResponse.data.response;
                 response = translateMathSymbols(response);
@@ -528,13 +435,11 @@
                 displayRotatingText(response);
                 history.push({ bot: response });
 
-                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: currentLanguage });
+                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: recognition.lang });
 
                 const audioContent = ttsResponse.data.audioContent;
                 audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
                 audioInstance.play();
-
-                startSpeaking();
 
                 await saveChatMessage(message, "general");
             } catch (error) {
@@ -551,6 +456,17 @@
                 });
             } catch (error) {
                 console.error('Error saving chat message', error);
+            }
+        }
+
+        async function scrapeWebsite(url) {
+            try {
+                const scrapeResponse = await axios.post(`${serverUrl}/scrape`, { url: url });
+                const explanation = scrapeResponse.data.explanation;
+                handleUserMessage(`The page says: ${explanation}`);
+            } catch (error) {
+                console.error('Error scraping website', error);
+                alert('Failed to scrape the website.');
             }
         }
 
@@ -589,27 +505,6 @@
             }
         };
 
-        window.toggleLanguageMenu = function() {
-            const languageMenu = document.getElementById('languageMenu');
-            if (languageMenu.style.display === 'none' || languageMenu.style.display === '') {
-                languageMenu.style.display = 'block';
-            } else {
-                languageMenu.style.display = 'none';
-            }
-        };
-
-        window.setLanguage = function(languageCode) {
-            currentLanguage = languageCode;
-            recognition.lang = languageCode;
-            alert(`Language set to ${languageCode}`);
-            toggleLanguageMenu();
-        };
-
-        window.closeWidget = function() {
-            const widget = document.getElementById('assistant-widget');
-            widget.style.display = 'none';
-        };
-
         window.homePage = function() {
             alert("Coming Soon");
         };
@@ -646,6 +541,18 @@
                     </svg>
                 `;
             }
+        };
+
+        window.toggleLanguageMenu = function() {
+            const languageMenu = document.getElementById('languageMenu');
+            languageMenu.classList.toggle('active');
+        };
+
+        window.setLanguage = function(lang) {
+            console.log(`Language set to: ${lang}`);
+            recognition.lang = lang;
+            alert(`Language set to: ${lang}`);
+            toggleLanguageMenu();
         };
     }
 
