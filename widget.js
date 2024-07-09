@@ -473,6 +473,17 @@
             }
         }
 
+        async function interactiveScrape(url, command) {
+            try {
+                const response = await axios.post(`${serverUrl}/interactive-scrape`, { url: url, command: command });
+                const result = response.data.result;
+                handleUserMessage(`Interactive scrape result: ${result}`);
+            } catch (error) {
+                console.error('Error in interactive scrape', error);
+                alert('Failed to perform interactive scrape.');
+            }
+        }
+
         function displayRotatingText(text) {
             const chunks = text.match(/.{1,50}/g);
             let currentIndex = 0;
