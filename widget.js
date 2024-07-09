@@ -181,13 +181,15 @@
     async function handleUserMessage(message) {
         try {
             history.push({ user: message });
-            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: currentLanguage });
+            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
 
             let response = chatResponse.data.response;
+            response = translateMathSymbols(response);
+            response = convertNumbersToWords(response);
             displayRotatingText(response);
             history.push({ bot: response });
 
-            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: currentLanguage });
+            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
 
             const audioContent = ttsResponse.data.audioContent;
             const audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
@@ -200,19 +202,38 @@
         }
     }
 
-    function displayRotatingText(text) {
-        const chunks = text.match(/.{1,50}/g);
-        let currentIndex = 0;
-        responseText.innerText = chunks[currentIndex];
+    function convertNumbersToWords(text) {
+        const numberMap = {
+            "0": "صفر",
+            "1": "واحد",
+            "2": "اثنان",
+            "3": "ثلاثة",
+            "4": "أربعة",
+            "5": "خمسة",
+            "6": "ستة",
+            "7": "سبعة",
+            "8": "ثمانية",
+            "9": "تسعة",
+            "10": "عشرة"
+        };
+        for (const [digit, word] of Object.entries(numberMap)) {
+            text = text.replace(new RegExp(digit, 'g'), word);
+        }
+        return text;
+    }
 
-        const intervalId = setInterval(() => {
-            currentIndex++;
-            if (currentIndex < chunks.length) {
-                responseText.innerText = chunks[currentIndex];
-            } else {
-                clearInterval(intervalId);
-            }
-        }, 6000);
+    function translateMathSymbols(text) {
+        const mathSymbols = {
+            "+": "زائد",
+            "-": "ناقص",
+            "*": "ضرب",
+            "/": "قسمة",
+            "=": "يساوي"
+        };
+        for (const [symbol, word] of Object.entries(mathSymbols)) {
+            text = text.replace(new RegExp(`\\${symbol}`, 'g'), ` ${word} `);
+        }
+        return text;
     }
 
     function initWidget() {
@@ -389,17 +410,17 @@
 
         loadStyles(cssStyles);
 
-        const serverUrl = 'https://leapthelimit-mz4r7ctc7q-zf.a.run.app';
+        const serverUrl = 'https://my-flask-app-mz4r7ctc7q-zf.a.run.app';
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
-        let currentLanguage = 'ar'; // Default to Arabic
+        let selectedLanguage = 'ar';
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = currentLanguage;
+            recognition.lang = 'ar';
 
             recognition.onstart = function() {
                 if (audioInstance) {
@@ -439,6 +460,67 @@
             recognition.start();
         };
 
+        async function handleUserMessage(message) {
+            try {
+                history.push({ user: message });
+                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
+
+                let response = chatResponse.data.response;
+                response = translateMathSymbols(response);
+                response = convertNumbersToWords(response);
+                displayRotatingText(response);
+                history.push({ bot: response });
+
+                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
+
+                const audioContent = ttsResponse.data.audioContent;
+                const audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+                audioInstance.play();
+
+                await saveChatMessage(message, "general");
+            } catch (error) {
+                console.error('Error handling user message', error);
+                responseText.innerText = 'Error occurred while processing your message.';
+            }
+        }
+
+        async function saveChatMessage(message, category) {
+            try {
+                await axios.post(`${serverUrl}/save-chat-message`, {
+                    message: message,
+                    category: category
+                });
+            } catch (error) {
+                console.error('Error saving chat message', error);
+            }
+        }
+
+        async function scrapeWebsite(url) {
+            try {
+                const scrapeResponse = await axios.post(`${serverUrl}/scrape`, { url: url });
+                const explanation = scrapeResponse.data.explanation;
+                handleUserMessage(`The page says: ${explanation}`);
+            } catch (error) {
+                console.error('Error scraping website', error);
+                alert('Failed to scrape the website.');
+            }
+        }
+
+        function displayRotatingText(text) {
+            const chunks = text.match(/.{1,50}/g);
+            let currentIndex = 0;
+            responseText.innerText = chunks[currentIndex];
+
+            const intervalId = setInterval(() => {
+                currentIndex++;
+                if (currentIndex < chunks.length) {
+                    responseText.innerText = chunks[currentIndex];
+                } else {
+                    clearInterval(intervalId);
+                }
+            }, 6000);
+        }
+
         window.toggleHistory = function() {
             const historyBox = document.getElementById('historyBox');
             const historyContent = document.getElementById('historyContent');
@@ -457,6 +539,10 @@
             } else {
                 historyBox.style.display = 'none';
             }
+        };
+
+        window.homePage = function() {
+            alert("Coming Soon");
         };
 
         window.toggleWidget = function() {
@@ -500,13 +586,9 @@
 
         window.setLanguage = function(lang) {
             console.log(`Language set to: ${lang}`);
-            currentLanguage = lang;
-            recognition.lang = lang;
+            selectedLanguage = lang;
+            recognition.lang = lang === 'ar' ? 'ar-SA' : (lang === 'he' ? 'he-IL' : 'en-US');
             toggleLanguageMenu();
-        };
-
-        window.homePage = function() {
-            alert("Coming Soon");
         };
     }
 
