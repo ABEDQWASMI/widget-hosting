@@ -18,7 +18,7 @@
             bottom: 96px;
             right: 16px;
             display: none;
-            z-index: 1000;
+            z-index: 1000;  /* Ensure widget is on top */
         }
         #widget-icon {
             position: fixed;
@@ -27,7 +27,6 @@
             width: 69px;
             height: 70px;
             cursor: pointer;
-            z-index: 1001;
         }
 
         .breathing {
@@ -131,6 +130,8 @@
                     <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon" onclick="toggleLanguageMenu()">
                         <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
                         <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
                         <path d="M14.5 23.1667C19.3325 23.1667 23.25 19.0626 23.25 14C23.25 8.9374 19.3325 4.83334 14.5 4.83334C9.66751 4.83334 5.75 8.9374 5.75 14C5.75 19.0626 9.66751 23.1667 14.5 23.1667Z" stroke="white" stroke-linecap="square"/>
                         <path d="M14.5 23.1667C16.8333 20.9445 18 17.8889 18 14C18 10.1111 16.8333 7.05557 14.5 4.83334C12.1667 7.05557 11 10.1111 11 14C11 17.8889 12.1667 20.9445 14.5 23.1667Z" stroke="white" stroke-linecap="round"/>
                         <path d="M6.1875 11.25H22.8125M6.1875 16.75H22.8125" stroke="white" stroke-linecap="round"/>
@@ -184,13 +185,15 @@
             const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: recognition.lang });
 
             let response = chatResponse.data.response;
+            response = translateMathSymbols(response);
+            response = convertNumbersToWords(response);
             displayRotatingText(response);
             history.push({ bot: response });
 
             const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: recognition.lang });
 
             const audioContent = ttsResponse.data.audioContent;
-            const audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+            audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
             audioInstance.play();
 
             await saveChatMessage(message, "general");
@@ -198,6 +201,40 @@
             console.error('Error handling user message', error);
             responseText.innerText = 'Error occurred while processing your message.';
         }
+    }
+
+    function convertNumbersToWords(text) {
+        const numberMap = {
+            "0": "صفر",
+            "1": "واحد",
+            "2": "اثنان",
+            "3": "ثلاثة",
+            "4": "أربعة",
+            "5": "خمسة",
+            "6": "ستة",
+            "7": "سبعة",
+            "8": "ثمانية",
+            "9": "تسعة",
+            "10": "عشرة"
+        };
+        for (const [digit, word] of Object.entries(numberMap)) {
+            text = text.replace(new RegExp(digit, 'g'), word);
+        }
+        return text;
+    }
+
+    function translateMathSymbols(text) {
+        const mathSymbols = {
+            "+": "زائد",
+            "-": "ناقص",
+            "*": "ضرب",
+            "/": "قسمة",
+            "=": "يساوي"
+        };
+        for (const [symbol, word] of Object.entries(mathSymbols)) {
+            text = text.replace(new RegExp(`\\${symbol}`, 'g'), ` ${word} `);
+        }
+        return text;
     }
 
     function initWidget() {
@@ -378,7 +415,7 @@
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
-        let audioInstance = null;
+        let audioInstance;
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
@@ -549,9 +586,8 @@
         };
 
         window.setLanguage = function(lang) {
-            console.log(`Language set to: ${lang}`);
             recognition.lang = lang;
-            alert(`Language set to: ${lang}`);
+            console.log(`Language set to: ${lang}`);
             toggleLanguageMenu();
         };
     }
