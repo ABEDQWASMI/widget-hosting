@@ -18,6 +18,7 @@
             bottom: 96px;
             right: 16px;
             display: none;
+            z-index: 9999;
         }
         #widget-icon {
             position: fixed;
@@ -26,6 +27,7 @@
             width: 69px;
             height: 70px;
             cursor: pointer;
+            z-index: 9999;
         }
 
         .breathing {
@@ -95,12 +97,20 @@
                 <div class="icon-container">
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b5c24373f8dd5ef5131c67177bccdbef574bf3f9ed5118f4e197ea82589a22df?apiKey=6ff838e322054338a5da6863c2494c61&" alt="History Icon" class="icon" onclick="toggleHistory()" />
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/95dad8e994e6b876df822e962cfc87ce2b5a9d7d32d644beda1bacf1554332cc?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Microphone Icon" class="icon-large" onclick="startListening()" />
-                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec3ad13fd252c5c0acb23d9fb00ecd75dab04844fe615a32906bc0f2ee5f0f79?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Home Icon" class="icon-bordered" onclick="homePage()" />
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec3ad13fd252c5c0acb23d9fb00ecd75dab04844fe615a32906bc0f2ee5f0f79?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Home Icon" class="icon-bordered" onclick="toggleLanguageSelector()" />
                 </div>
             </section>
             <div class="history-box" id="historyBox">
                 <button class="close-button" onclick="toggleHistory()">Close</button>
                 <div id="historyContent"></div>
+            </div>
+            <div class="language-selector" id="languageSelector">
+                <button class="close-button" onclick="toggleLanguageSelector()">Close</button>
+                <div>
+                    <button onclick="setLanguage('ar')">Arabic</button>
+                    <button onclick="setLanguage('en')">English</button>
+                    <button onclick="setLanguage('he')">Hebrew</button>
+                </div>
             </div>
         </div>
         <div id="widget-icon" onclick="toggleWidget()">
@@ -183,7 +193,7 @@
     async function handleUserMessage(message) {
         try {
             history.push({ user: message });
-            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message });
+            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
 
             let response = chatResponse.data.response;
             response = translateMathSymbols(response);
@@ -191,7 +201,7 @@
             displayRotatingText(response);
             history.push({ bot: response });
 
-            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: 'ar-SA' });
+            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
 
             const audioContent = ttsResponse.data.audioContent;
             audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
@@ -374,6 +384,35 @@
             .history-entry {
                 margin-bottom: 8px;
             }
+
+            .language-selector {
+                display: none;
+                position: fixed;
+                bottom: 20%;
+                right: 10%;
+                width: 200px;
+                height: 200px;
+                background-color: #333;
+                color: white;
+                padding: 16px;
+                border-radius: 10px;
+                overflow-y: auto;
+            }
+
+            .language-selector button {
+                width: 100%;
+                padding: 10px;
+                margin: 5px 0;
+                background-color: #c736d9;
+                border: none;
+                color: white;
+                cursor: pointer;
+                border-radius: 5px;
+            }
+
+            .language-selector button:hover {
+                background-color: #9aed66;
+            }
         `;
 
         loadStyles(cssStyles);
@@ -382,12 +421,13 @@
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
+        let selectedLanguage = 'ar'; // Default language
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = 'ar';
+            recognition.lang = selectedLanguage;
 
             recognition.onstart = function() {
                 if (audioInstance) {
@@ -430,7 +470,7 @@
         async function handleUserMessage(message) {
             try {
                 history.push({ user: message });
-                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message });
+                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
 
                 let response = chatResponse.data.response;
                 response = translateMathSymbols(response);
@@ -438,7 +478,7 @@
                 displayRotatingText(response);
                 history.push({ bot: response });
 
-                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: 'ar-SA' });
+                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
 
                 const audioContent = ttsResponse.data.audioContent;
                 audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
@@ -470,17 +510,6 @@
             } catch (error) {
                 console.error('Error scraping website', error);
                 alert('Failed to scrape the website.');
-            }
-        }
-
-        async function interactiveScrape(url, command) {
-            try {
-                const scrapeResponse = await axios.post(`${serverUrl}/interactive-scrape`, { url: url, command: command });
-                const result = scrapeResponse.data.result;
-                handleUserMessage(`Interactive scrape result: ${result}`);
-            } catch (error) {
-                console.error('Error performing interactive scrape', error);
-                alert('Failed to perform interactive scrape.');
             }
         }
 
@@ -519,8 +548,20 @@
             }
         };
 
-        window.homePage = function() {
-            alert("Coming Soon");
+        window.toggleLanguageSelector = function() {
+            const languageSelector = document.getElementById('languageSelector');
+
+            if (languageSelector.style.display === 'none' || languageSelector.style.display === '') {
+                languageSelector.style.display = 'block';
+            } else {
+                languageSelector.style.display = 'none';
+            }
+        };
+
+        window.setLanguage = function(language) {
+            selectedLanguage = language;
+            recognition.lang = selectedLanguage;
+            toggleLanguageSelector();
         };
 
         window.toggleWidget = function() {
