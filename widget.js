@@ -184,6 +184,8 @@
             const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: currentLanguage });
 
             let response = chatResponse.data.response;
+            response = translateMathSymbols(response);
+            response = convertNumbersToWords(response);
             displayRotatingText(response);
             history.push({ bot: response });
 
@@ -412,13 +414,14 @@
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
+        let audioInstance;
         let currentLanguage = 'ar';  // Default language
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = currentLanguage;
+            recognition.lang = 'ar';
 
             recognition.onstart = function() {
                 if (audioInstance) {
@@ -539,10 +542,6 @@
             }
         };
 
-        window.homePage = function() {
-            alert("Coming Soon");
-        };
-
         window.toggleWidget = function() {
             const widget = document.getElementById('assistant-widget');
             const widgetIcon = document.getElementById('widget-icon');
@@ -577,16 +576,17 @@
             }
         };
 
-        window.setLanguage = function(lang) {
-            console.log(`Language set to: ${lang}`);
-            currentLanguage = lang;
-            recognition.lang = lang;
-            toggleLanguageMenu();
-        };
-
         window.toggleLanguageMenu = function() {
             const languageMenu = document.getElementById('languageMenu');
             languageMenu.classList.toggle('active');
+        };
+
+        window.setLanguage = function(lang) {
+            currentLanguage = lang;
+            recognition.lang = lang === 'ar' ? 'ar' : lang === 'en' ? 'en-US' : 'he';
+            console.log(`Language set to: ${lang}`);
+            // Additional code to handle language change can be added here
+            toggleLanguageMenu();
         };
     }
 
