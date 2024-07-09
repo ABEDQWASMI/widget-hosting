@@ -17,8 +17,8 @@
             position: fixed;
             bottom: 96px;
             right: 16px;
+            z-index: 1000;  /* Ensure the widget is always on top */
             display: none;
-            z-index: 1000;
         }
         #widget-icon {
             position: fixed;
@@ -27,7 +27,6 @@
             width: 69px;
             height: 70px;
             cursor: pointer;
-            z-index: 1000;
         }
 
         .breathing {
@@ -129,14 +128,12 @@
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b5c24373f8dd5ef5131c67177bccdbef574bf3f9ed5118f4e197ea82589a22df?apiKey=6ff838e322054338a5da6863c2494c61&" alt="History Icon" class="icon" onclick="toggleHistory()" />
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/95dad8e994e6b876df822e962cfc87ce2b5a9d7d32d644beda1bacf1554332cc?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Microphone Icon" class="icon-large" onclick="startListening()" />
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/ec3ad13fd252c5c0acb23d9fb00ecd75dab04844fe615a32906bc0f2ee5f0f79?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Home Icon" class="icon-bordered" onclick="homePage()" />
-                    <svg width="29" height="132" viewBox="0 0 29 132" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon" onclick="toggleLanguageMenu()">
-                        <rect x="0.25" y="103.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
-                        <rect x="0.25" y="103.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
-                        <rect x="0.25" y="103.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
-                        <rect x="0.25" y="103.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
-                        <path d="M14.5 126.167C19.3325 126.167 23.25 122.063 23.25 117C23.25 111.937 19.3325 107.833 14.5 107.833C9.66751 107.833 5.75 111.937 5.75 117C5.75 122.063 9.66751 126.167 14.5 126.167Z" stroke="white" stroke-linecap="square"/>
-                        <path d="M14.5 126.167C16.8333 123.944 18 120.889 18 117C18 113.111 16.8333 110.056 14.5 107.833C12.1667 110.056 11 113.111 11 117C11 120.889 12.1667 123.944 14.5 126.167Z" stroke="white" stroke-linecap="round"/>
-                        <path d="M6.1875 114.25H22.8125M6.1875 119.75H22.8125" stroke="white" stroke-linecap="round"/>
+                    <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon" onclick="toggleLanguageMenu()">
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
+                        <path d="M14.5 23.1667C19.3325 23.1667 23.25 19.0626 23.25 14C23.25 8.9374 19.3325 4.83334 14.5 4.83334C9.66751 4.83334 5.75 8.9374 5.75 14C5.75 19.0626 9.66751 23.1667 14.5 23.1667Z" stroke="white" stroke-linecap="square"/>
+                        <path d="M14.5 23.1667C16.8333 20.9445 18 17.8889 18 14C18 10.1111 16.8333 7.05557 14.5 4.83334C12.1667 7.05557 11 10.1111 11 14C11 17.8889 12.1667 20.9445 14.5 23.1667Z" stroke="white" stroke-linecap="round"/>
+                        <path d="M6.1875 11.25H22.8125M6.1875 16.75H22.8125" stroke="white" stroke-linecap="round"/>
                     </svg>
                 </div>
             </section>
@@ -191,7 +188,7 @@
             displayRotatingText(response);
             history.push({ bot: response });
 
-            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: currentLanguage });
+            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: `${currentLanguage}` });
 
             const audioContent = ttsResponse.data.audioContent;
             audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
@@ -420,7 +417,7 @@
         const responseText = document.querySelector('.question-text');
         let recognition;
         let history = [];
-        let currentLanguage = 'ar'; // Default language is Arabic
+        let currentLanguage = 'ar';
 
         if ('webkitSpeechRecognition' in window) {
             recognition = new webkitSpeechRecognition();
@@ -429,9 +426,9 @@
             recognition.lang = currentLanguage;
 
             recognition.onstart = function() {
-                if (audioInstance) {
-                    audioInstance.pause();
-                    audioInstance = null;
+                if (window.audioInstance) {
+                    window.audioInstance.pause();
+                    window.audioInstance = null;
                 }
                 responseText.innerText = 'Listening...';
                 document.querySelectorAll('.circle').forEach(circle => {
@@ -477,11 +474,11 @@
                 displayRotatingText(response);
                 history.push({ bot: response });
 
-                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: currentLanguage });
+                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: `${currentLanguage}` });
 
                 const audioContent = ttsResponse.data.audioContent;
-                audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
-                audioInstance.play();
+                window.audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
+                window.audioInstance.play();
 
                 startSpeaking();
 
@@ -500,17 +497,6 @@
                 });
             } catch (error) {
                 console.error('Error saving chat message', error);
-            }
-        }
-
-        async function scrapeWebsite(url) {
-            try {
-                const scrapeResponse = await axios.post(`${serverUrl}/scrape`, { url: url });
-                const explanation = scrapeResponse.data.explanation;
-                handleUserMessage(`The page says: ${explanation}`);
-            } catch (error) {
-                console.error('Error scraping website', error);
-                alert('Failed to scrape the website.');
             }
         }
 
