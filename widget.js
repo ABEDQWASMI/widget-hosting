@@ -1,5 +1,5 @@
 (function() {
-    const widgetStyles = 
+    const widgetStyles = `
         #assistant-widget {
             width: 320px;
             height: 563px;
@@ -96,9 +96,9 @@
         .language-menu button:hover {
             background-color: #555;
         }
-    ;
+    `;
 
-    const widgetHTML = 
+    const widgetHTML = `
         <div id="assistant-widget">
             <section class="finlix-container">
                 <h1 class="brand-name">
@@ -156,7 +156,7 @@
                 <circle cx="53.5" cy="35.5" r="6.5" fill="#BCD8FA"/>
             </svg>
         </div>
-    ;
+    `;
 
     function loadStyles(styles) {
         const styleSheet = document.createElement('style');
@@ -181,16 +181,16 @@
     async function handleUserMessage(message) {
         try {
             history.push({ user: message });
-            const chatResponse = await axios.post(${serverUrl}/chat, { message: message });
+            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message });
 
             let response = chatResponse.data.response;
             displayRotatingText(response);
             history.push({ bot: response });
 
-            const ttsResponse = await axios.post(${serverUrl}/synthesize, { text: response, language_code: 'ar-SA' });
+            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: 'ar-SA' });
 
             const audioContent = ttsResponse.data.audioContent;
-            audioInstance = new Audio(data:audio/mp3;base64,${audioContent});
+            audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
             audioInstance.play();
 
             await saveChatMessage(message, "general");
@@ -229,7 +229,7 @@
             "=": "يساوي"
         };
         for (const [symbol, word] of Object.entries(mathSymbols)) {
-            text = text.replace(new RegExp(\\${symbol}, 'g'),  ${word} );
+            text = text.replace(new RegExp(`\\${symbol}`, 'g'), ` ${word} `);
         }
         return text;
     }
@@ -238,7 +238,7 @@
         loadStyles(widgetStyles);
         loadHTML(widgetHTML);
 
-        const cssStyles = 
+        const cssStyles = `
             .finlix-container {
                 border-radius: 25px;
                 background-color: #000;
@@ -404,7 +404,7 @@
             .history-entry {
                 margin-bottom: 8px;
             }
-        ;
+        `;
 
         loadStyles(cssStyles);
 
@@ -460,7 +460,7 @@
         async function handleUserMessage(message) {
             try {
                 history.push({ user: message });
-                const chatResponse = await axios.post(${serverUrl}/chat, { message: message });
+                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message });
 
                 let response = chatResponse.data.response;
                 response = translateMathSymbols(response);
@@ -468,10 +468,10 @@
                 displayRotatingText(response);
                 history.push({ bot: response });
 
-                const ttsResponse = await axios.post(${serverUrl}/synthesize, { text: response, language_code: 'ar-SA' });
+                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: 'ar-SA' });
 
                 const audioContent = ttsResponse.data.audioContent;
-                audioInstance = new Audio(data:audio/mp3;base64,${audioContent});
+                audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
                 audioInstance.play();
 
                 await saveChatMessage(message, "general");
@@ -483,7 +483,7 @@
 
         async function saveChatMessage(message, category) {
             try {
-                await axios.post(${serverUrl}/save-chat-message, {
+                await axios.post(`${serverUrl}/save-chat-message`, {
                     message: message,
                     category: category
                 });
@@ -494,9 +494,9 @@
 
         async function scrapeWebsite(url) {
             try {
-                const scrapeResponse = await axios.post(${serverUrl}/scrape, { url: url });
+                const scrapeResponse = await axios.post(`${serverUrl}/scrape`, { url: url });
                 const explanation = scrapeResponse.data.explanation;
-                handleUserMessage(The page says: ${explanation});
+                handleUserMessage(`The page says: ${explanation}`);
             } catch (error) {
                 console.error('Error scraping website', error);
                 alert('Failed to scrape the website.');
@@ -525,9 +525,9 @@
             if (historyBox.style.display === 'none' || historyBox.style.display === '') {
                 let historyHtml = history.map(entry => {
                     if (entry.user) {
-                        return <div class="history-entry">User: ${entry.user}</div>;
+                        return `<div class="history-entry">User: ${entry.user}</div>`;
                     } else if (entry.bot) {
-                        return <div class="history-entry">Bot: ${entry.bot}</div>;
+                        return `<div class="history-entry">Bot: ${entry.bot}</div>`;
                     }
                 }).join('');
 
@@ -548,7 +548,7 @@
 
             if (widget.style.display === 'none' || widget.style.display === '') {
                 widget.style.display = 'flex';
-                widgetIcon.innerHTML = 
+                widgetIcon.innerHTML = `
                     <svg width="69" height="70" viewBox="0 0 86 88" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <ellipse cx="43" cy="44" rx="43" ry="44" fill="black"/>
                         <path d="M43.5 50.5817L28.9465 34.3393C28.5411 33.8869 27.8838 33.8869 27.4785 34.3393L26.304 35.65C25.8987 36.1024 25.8987 36.836 26.304 37.2884L42.766 55.6607C43.1714 56.1131 43.8286 56.1131 44.234 55.6607L60.696 37.2884C61.1013 36.836 61.1013 36.1024 60.696 35.65L59.5215 34.3393C59.1162 33.8869 58.4589 33.8869 58.0535 34.3393L43.5 50.5817Z" fill="url(#paint0_linear_5_74)"/>
@@ -561,10 +561,10 @@
                         </linearGradient>
                         </defs>
                     </svg>
-                ;
+                `;
             } else {
                 widget.style.display = 'none';
-                widgetIcon.innerHTML = 
+                widgetIcon.innerHTML = `
                     <svg width="69" height="70" viewBox="0 0 86 88" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <ellipse cx="43" cy="44" rx="43" ry="44" fill="black"/>
                         <circle cx="32" cy="35" r="12" fill="#C736D9"/>
@@ -572,7 +572,7 @@
                         <circle cx="37.5" cy="57.5" r="5.5" fill="#D9D9D9"/>
                         <circle cx="53.5" cy="35.5" r="6.5" fill="#BCD8FA"/>
                     </svg>
-                ;
+                `;
             }
         };
 
@@ -582,7 +582,7 @@
         };
 
         window.setLanguage = function(lang) {
-            console.log(Language set to: ${lang});
+            console.log(`Language set to: ${lang}`);
             // Additional code to handle language change can be added here
             toggleLanguageMenu();
         };
