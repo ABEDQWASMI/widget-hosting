@@ -1,23 +1,23 @@
 (function() {
     const widgetStyles = `
-        #assistant-widget {
-            width: 320px;
-            height: 563px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #000;
-            color: lightgray;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #333;
-            border-radius: 10px;
-            overflow: hidden;
-            position: fixed;
-            bottom: 96px;
-            right: 16px;
-            display: none;
+      #assistant-widget {
+          width: 320px;
+          height: 563px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #000;
+          color: lightgray;
+          padding: 8px;
+          box-sizing: border-box;
+          border: 1px solid #333;
+          border-radius: 10px;
+          overflow: hidden;
+          position: fixed;
+          bottom: 106px;
+          right: 16px; z-index: 900;
+          display: none;
         }
         #widget-icon {
             position: fixed;
@@ -158,7 +158,7 @@
         </div>
     `;
 
-    function loadStyles(styles) {
+       function loadStyles(styles) {
         const styleSheet = document.createElement('style');
         styleSheet.type = 'text/css';
         styleSheet.innerText = styles;
@@ -239,6 +239,7 @@
     function initWidget() {
         loadStyles(widgetStyles);
         loadHTML(widgetHTML);
+  
 
         const cssStyles = `
             .finlix-container {
@@ -408,7 +409,7 @@
             }
         `;
 
-        loadStyles(cssStyles);
+                loadStyles(cssStyles);
 
         const serverUrl = 'https://my-flask-app-mz4r7ctc7q-zf.a.run.app';
         const responseText = document.querySelector('.question-text');
