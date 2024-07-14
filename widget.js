@@ -158,7 +158,7 @@
         </div>
     `;
 
-       function loadStyles(styles) {
+    function loadStyles(styles) {
         const styleSheet = document.createElement('style');
         styleSheet.type = 'text/css';
         styleSheet.innerText = styles;
@@ -176,30 +176,6 @@
         script.src = url;
         script.onload = callback;
         document.head.appendChild(script);
-    }
-
-    async function handleUserMessage(message) {
-        try {
-            history.push({ user: message });
-            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
-
-            let response = chatResponse.data.response;
-            response = translateMathSymbols(response);
-            response = convertNumbersToWords(response);
-            displayRotatingText(response);
-            history.push({ bot: response });
-
-            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
-
-            const audioContent = ttsResponse.data.audioContent;
-            audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
-            audioInstance.play();
-
-            await saveChatMessage(message, "general");
-        } catch (error) {
-            console.error('Error handling user message', error);
-            responseText.innerText = 'Error occurred while processing your message.';
-        }
     }
 
     function convertNumbersToWords(text) {
@@ -239,177 +215,6 @@
     function initWidget() {
         loadStyles(widgetStyles);
         loadHTML(widgetHTML);
-  
-
-        const cssStyles = `
-            .finlix-container {
-                border-radius: 25px;
-                background-color: #000;
-                display: flex;
-                width: 100%;
-                flex-direction: column;
-                align-items: center;
-                padding: 16px;
-                box-sizing: border-box;
-            }
-
-            .brand-name {
-                justify-content: center;
-                border-radius: 18px;
-                border: none;
-                background-color: rgba(199, 54, 217, 0);
-                color: #fff;
-                white-space: nowrap;
-                padding: 6.4px 12.8px;
-                font: 500 11.2px/112% Inter, sans-serif;
-                margin-top: 8px;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .brand-name svg {
-                display: inline-block;
-                vertical-align: middle;
-            }
-
-            .powered-by {
-                color: #767676;
-                margin-top: 8px;
-                font: 300 9.6px/112% Inter, sans-serif;
-            }
-
-            .powered-by a {
-                color: #767676;
-                text-decoration: none;
-            }
-
-            .powered-by a:hover {
-                text-decoration: underline;
-            }
-
-            .shape-container {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-top: 16px;
-                position: relative;
-                width: 100%;
-                height: 240px;
-            }
-
-            .shape {
-                position: absolute;
-            }
-
-            .circle {
-                border-radius: 50%;
-                position: absolute;
-                animation: breathe 3s infinite;
-            }
-
-            .circle-listening {
-                animation: heartbeat 1s infinite;
-            }
-
-            .purple-circle {
-                background-color: #c736d9;
-                width: 103.2px;
-                height: 107.2px;
-                left: calc(50% - 84px);
-                top: calc(50% - 80px);
-            }
-
-            .blue-circle {
-                background-color: #bcd8fa;
-                width: 54.4px;
-                height: 54.4px;
-                left: calc(50% + 32px);
-                top: calc(50% - 64px);
-            }
-
-            .green-circle {
-                background-color: #9aed66;
-                width: 72px;
-                height: 68.8px;
-                left: calc(50% + 16px);
-                top: calc(50% + 8px);
-            }
-
-            .gray-circle {
-                background-color: #d9d9d9;
-                width: 48.8px;
-                height: 46.4px;
-                left: calc(50% - 48px);
-                top: calc(64% + 40px);
-            }
-
-            .question-text {
-                color: #c3c3c3;
-                margin-top: 16px;
-                font: 400 22.4px/28.8px Inter, sans-serif;
-                text-align: center;
-            }
-
-            .icon-container {
-                display: flex;
-                margin-top: 16px;
-                align-items: center;
-                gap: 24px;
-                justify-content: space-around;
-                width: 100%;
-                padding: 16px;
-                position: absolute;
-                bottom: 16px;
-            }
-
-            .icon {
-                width: 36px;
-                cursor: pointer;
-            }
-
-            .icon-large {
-                width: 56px;
-                cursor: pointer;
-            }
-
-            .icon-bordered {
-                width: 36px;
-                cursor: pointer;
-                border-radius: 50%;
-                border: 1px solid #6b6b6b;
-            }
-
-            .history-box {
-                display: none;
-                position: fixed;
-                bottom: 8%;
-                right: 8%;
-                width: 240px;
-                height: 320px;
-                background-color: #333;
-                color: white;
-                padding: 16px;
-                border-radius: 10px;
-                overflow-y: auto;
-            }
-
-            .close-button {
-                background-color: #c736d9;
-                border: none;
-                color: white;
-                padding: 4px 8px;
-                cursor: pointer;
-                border-radius: 5px;
-                float: right;
-            }
-
-            .history-entry {
-                margin-bottom: 8px;
-            }
-        `;
-
-                loadStyles(cssStyles);
 
         const serverUrl = 'https://my-flask-app-mz4r7ctc7q-zf.a.run.app';
         const responseText = document.querySelector('.question-text');
@@ -468,8 +273,10 @@
                 const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
 
                 let response = chatResponse.data.response;
-                response = translateMathSymbols(response);
-                response = convertNumbersToWords(response);
+                if (selectedLanguage === 'ar') {
+                    response = translateMathSymbols(response);
+                    response = convertNumbersToWords(response);
+                }
                 displayRotatingText(response);
                 history.push({ bot: response });
 
