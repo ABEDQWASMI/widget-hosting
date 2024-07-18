@@ -204,11 +204,7 @@
             responseText.innerText = 'Error occurred while processing your message.';
         }
     }
-function initializeAssistantWidget() {
-    // Widget initialization logic
-    console.log("Assistant widget initialized");
-    // Additional initialization code here
-}
+
     function convertNumbersToWords(text) {
         const numberMap = {
             "0": "صفر",
@@ -533,6 +529,11 @@ function initializeAssistantWidget() {
             }, 6000);
         }
 
+        function initializeAssistantWidget() {
+            // Widget initialization logic
+            console.log("Assistant widget initialized");
+        // Additional initialization code here
+        }
         window.toggleHistory = function() {
             const historyBox = document.getElementById('historyBox');
             const historyContent = document.getElementById('historyContent');
