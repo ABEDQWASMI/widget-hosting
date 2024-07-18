@@ -204,7 +204,11 @@
             responseText.innerText = 'Error occurred while processing your message.';
         }
     }
-
+function initializeAssistantWidget() {
+    // Widget initialization logic
+    console.log("Assistant widget initialized");
+    // Additional initialization code here
+}
     function convertNumbersToWords(text) {
         const numberMap = {
             "0": "صفر",
