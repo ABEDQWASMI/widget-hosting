@@ -178,43 +178,99 @@
         document.head.appendChild(script);
     }
 
-async function handleUserMessage(message) {
-    try {
-        const chatResponse = await fetch('https://leapthelimit-mz4r7ctc7q-zf.a.run.app/chat', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ message: message, language: selectedLanguage })  // Pass selected language here
-        });
+    async function handleUserMessage(message) {
+        try {
+            const chatResponse = await fetch('https://leapthelimit-mz4r7ctc7q-zf.a.run.app/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message, language: selectedLanguage })  // Pass selected language here
+            });
 
-        const data = await chatResponse.json();
-        const response = data.response;
-        displayRotatingText(response);
+            const data = await chatResponse.json();
+            const response = data.response;
+            displayRotatingText(response);
 
-        const ttsResponse = await fetch('https://leapthelimit-mz4r7ctc7q-zf.a.run.app/synthesize', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ text: response, language_code: selectedLanguage })
-        });
+            const ttsResponse = await fetch('https://leapthelimit-mz4r7ctc7q-zf.a.run.app/synthesize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: response, language_code: selectedLanguage })
+            });
 
-        const ttsData = await ttsResponse.json();
-        const audioContent = ttsData.audioContent;
-        const audio = new Audio(`data:audio/mp3;base64,${audioContent}`);
-        audio.play();
+            const ttsData = await ttsResponse.json();
+            const audioContent = ttsData.audioContent;
+            const audio = new Audio(`data:audio/mp3;base64,${audioContent}`);
+            audio.play();
 
-        // Save chat message
-        await saveChatMessage(message, "general");
+            // Save chat message
+            await saveChatMessage(message, "general");
 
-    } catch (error) {
-        console.error('Error handling user message', error);
-        const responseText = document.querySelector('.question-text');
-        responseText.innerText = 'Error occurred while processing your message.';
+        } catch (error) {
+            console.error('Error handling user message', error);
+            const responseText = document.querySelector('.question-text');
+            responseText.innerText = 'Error occurred while processing your message.';
+        }
     }
-}
 
+    async function saveChatMessage(message, category) {
+        try {
+            await fetch('https://leapthelimit-mz4r7ctc7q-zf.a.run.app/save-chat-message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: message, category: category })
+            });
+        } catch (error) {
+            console.error('Error saving chat message', error);
+        }
+    }
+
+    async function scrapeWebsite(url) {
+        try {
+            const scrapeResponse = await fetch('https://leapthelimit-mz4r7ctc7q-zf.a.run.app/scrape', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ url: url })
+            });
+
+            const data = await scrapeResponse.json();
+            if (scrapeResponse.ok) {
+                const explanation = data.explanation;
+                handleUserMessage(`The page says: ${explanation}`);
+            } else {
+                alert('Failed to scrape the website: ' + data.error);
+            }
+        } catch (error) {
+            console.error('Error scraping website', error);
+            alert('An error occurred while scraping the website.');
+        }
+    }
+
+    function displayRotatingText(text) {
+        const responseText = document.querySelector('.question-text');
+        const chunks = text.match(/.{1,50}/g);
+        let currentIndex = 0;
+        responseText.innerText = chunks[currentIndex];
+
+        const intervalId = setInterval(() => {
+            currentIndex++;
+            if (currentIndex < chunks.length) {
+                responseText.innerText = chunks[currentIndex];
+            } else {
+                clearInterval(intervalId);
+            }
+        }, 6000);
+    }
+
+    function initializeAssistantWidget() {
+        console.log("Assistant widget initialized");
+    }
 
     function convertNumbersToWords(text) {
         const numberMap = {
@@ -253,7 +309,6 @@ async function handleUserMessage(message) {
     function initWidget() {
         loadStyles(widgetStyles);
         loadHTML(widgetHTML);
-  
 
         const cssStyles = `
             .finlix-container {
@@ -479,17 +534,31 @@ async function handleUserMessage(message) {
         async function handleUserMessage(message) {
             try {
                 history.push({ user: message });
-                const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
+                const chatResponse = await fetch(`${serverUrl}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message, language: selectedLanguage })
+                });
 
-                let response = chatResponse.data.response;
+                const data = await chatResponse.json();
+                let response = data.response;
                 response = translateMathSymbols(response);
                 response = convertNumbersToWords(response);
                 displayRotatingText(response);
                 history.push({ bot: response });
 
-                const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
+                const ttsResponse = await fetch(`${serverUrl}/synthesize`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: response, language_code: selectedLanguage })
+                });
 
-                const audioContent = ttsResponse.data.audioContent;
+                const ttsData = await ttsResponse.json();
+                const audioContent = ttsData.audioContent;
                 if (audioInstance) {
                     audioInstance.pause();
                 }
@@ -505,9 +574,12 @@ async function handleUserMessage(message) {
 
         async function saveChatMessage(message, category) {
             try {
-                await axios.post(`${serverUrl}/save-chat-message`, {
-                    message: message,
-                    category: category
+                await fetch(`${serverUrl}/save-chat-message`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: message, category: category })
                 });
             } catch (error) {
                 console.error('Error saving chat message', error);
@@ -516,12 +588,24 @@ async function handleUserMessage(message) {
 
         async function scrapeWebsite(url) {
             try {
-                const scrapeResponse = await axios.post(`${serverUrl}/scrape`, { url: url });
-                const explanation = scrapeResponse.data.explanation;
-                handleUserMessage(`The page says: ${explanation}`);
+                const scrapeResponse = await fetch(`${serverUrl}/scrape`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const data = await scrapeResponse.json();
+                if (scrapeResponse.ok) {
+                    const explanation = data.explanation;
+                    handleUserMessage(`The page says: ${explanation}`);
+                } else {
+                    alert('Failed to scrape the website: ' + data.error);
+                }
             } catch (error) {
                 console.error('Error scraping website', error);
-                alert('Failed to scrape the website.');
+                alert('An error occurred while scraping the website.');
             }
         }
 
@@ -603,18 +687,13 @@ async function handleUserMessage(message) {
             languageMenu.classList.toggle('active');
         };
 
-    window.setLanguage = function(lang) {
-    selectedLanguage = lang;
-    console.log(`Language set to: ${lang}`);
-    recognition.lang = lang === 'en' ? 'en-US' : lang === 'he' ? 'he-IL' : 'ar-SA';
-    toggleLanguageMenu();
-};
-
+        window.setLanguage = function(lang) {
+            selectedLanguage = lang;
+            console.log(`Language set to: ${lang}`);
+            recognition.lang = lang === 'en' ? 'en-US' : lang === 'he' ? 'he-IL' : 'ar-SA';
+            toggleLanguageMenu();
+        };
     }
 
     loadScript('https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js', initWidget);
 })();
-
-
-
-
