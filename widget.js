@@ -1,149 +1,8 @@
 (function() {
-    const homePageStyles = `
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .widget {
-            width: 320px; /* Match the widget size */
-            height: 563px; /* Match the widget size */
-            background-color: black;
-            border-radius: 25px;
-            overflow: hidden;
-            position: relative;
-            padding: 20px;
-            box-sizing: border-box;
-            color: white;
-        }
-        .menu-icon {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            cursor: pointer;
-        }
-        .menu-icon svg {
-            width: 24px;
-            height: 24px;
-        }
-        h1 {
-            margin-top: 80px;
-            font-size: 24px; /* Adjusted font size */
-            font-weight: 200;
-        }
-        .card-container {
-            display: flex;
-            flex-direction: column; /* Adjusted for better layout */
-            align-items: center; /* Center aligned */
-            margin-top: 20px;
-        }
-        .card {
-            width: 200px; /* Adjusted width */
-            height: 100px; /* Adjusted height */
-            border-radius: 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: black;
-            font-size: 18px;
-            font-weight: light;
-            position: relative;
-            text-align: center;
-            margin-bottom: 20px; /* Added margin */
-        }
-        .card svg {
-            width: 24px; /* Adjusted size */
-            height: 24px; /* Adjusted size */
-            margin-bottom: 8px;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-        .card.purple {
-            background-color: #c736d9;
-            color: black;
-        }
-        .card.blue {
-            background-color: #BCD8FA;
-        }
-        .card.green {
-            background-color: #9AED66;
-        }
-        .footer {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 12px;
-            color: #767676;
-        }
-        .card span {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-        }
-    `;
-
-    const homePageHTML = `
-        <div class="widget" id="home-widget">
-            <div class="menu-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 12H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M3 6H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M3 18H21" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
-            <h1>How may I help you today!</h1>
-            <div class="card-container">
-                <div class="card purple" onclick="showMainWidget()">
-                    <svg width="34" height="35" viewBox="0 0 34 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="17" cy="17.5" rx="17" ry="17.5" fill="white" fill-opacity="0.47"/>
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M23.4362 6.11596C23.3962 5.96135 23.2088 5.96135 23.1688 6.11596C22.762 7.68248 21.7085 8.90718 20.3608 9.37995C20.2278 9.42645 20.2278 9.64438 20.3608 9.69088C21.7085 10.1637 22.762 11.3884 23.1688 12.9549C23.2088 13.1095 23.3962 13.1095 23.4362 12.9549C23.8429 11.3884 24.8965 10.1637 26.2441 9.69088C26.3772 9.64438 26.3772 9.42645 26.2441 9.37995C24.8965 8.90718 23.8429 7.68248 23.4362 6.11596ZM16.4094 8.65081C13.9606 8.65081 11.975 10.958 11.975 13.8046V18.397C11.975 21.2435 13.9606 23.5516 16.4094 23.5516C18.8581 23.5516 20.8438 21.2435 20.8438 18.397V13.8046C20.8438 10.9581 18.8581 8.65081 16.4094 8.65081ZM14.7163 14.9142C14.9831 14.9142 15.2001 15.1655 15.2001 15.4766V17.1634C15.2001 17.4735 14.9832 17.7257 14.7163 17.7257C14.4496 17.7257 14.2326 17.4736 14.2326 17.1634V15.4766C14.2326 15.1657 14.4494 14.9142 14.7163 14.9142ZM16.8931 14.0708C16.8931 13.7599 16.6763 13.5085 16.4094 13.5085C16.1426 13.5085 15.9256 13.7597 15.9256 14.0708V18.5692C15.9256 18.8793 16.1425 19.1315 16.4094 19.1315C16.6761 19.1315 16.8931 18.8795 16.8931 18.5692V14.0708ZM18.1025 15.4766C18.3692 15.4766 18.5862 15.7278 18.5862 16.0389V16.6013C18.5862 16.9113 18.3694 17.1636 18.1025 17.1636C17.8357 17.1636 17.6187 16.9115 17.6187 16.6013V16.0389C17.6187 15.728 17.8356 15.4766 18.1025 15.4766ZM10.9675 18.1098C10.9675 17.7997 10.7514 17.5474 10.4838 17.5474C10.217 17.5474 10 17.7995 10 18.1098V18.397C10 22.3225 12.6121 25.539 15.9256 25.8263V27.4377C15.9256 27.7477 16.1425 28 16.4094 28C16.6769 28 16.8931 27.7479 16.8931 27.4377V25.8263C20.2067 25.5391 22.8188 22.3226 22.8188 18.397V18.1098C22.8188 17.7997 22.6027 17.5474 22.335 17.5474C22.0683 17.5474 21.8512 17.7995 21.8512 18.1098V18.397C21.8512 21.8903 19.4145 24.7228 16.4093 24.7228C13.4042 24.7228 10.9674 21.8903 10.9674 18.397L10.9675 18.1098ZM25.412 13.1677C25.4324 13.0903 25.5261 13.0903 25.5465 13.1677C25.749 13.9505 26.2766 14.5638 26.9501 14.7993C27.0166 14.823 27.0166 14.9319 26.9501 14.9556C26.2766 15.191 25.749 15.8043 25.5465 16.5872C25.5261 16.6646 25.4324 16.6646 25.412 16.5872C25.2095 15.8044 24.6819 15.1911 24.0084 14.9556C23.9418 14.9319 23.9418 14.823 24.0084 14.7993C24.6818 14.5639 25.2094 13.9506 25.412 13.1677Z" fill="black"/>
-                        <span style="display: block; line-height: 1.7;">
-                            <span>Talk to</span>
-                            <span style="display: block; margin-top: 10px;">Finlix</span>
-                        </span>
-                    </svg>
-                </div>
-                <div class="card blue">
-                    <svg width="34" height="35" viewBox="0 0 34 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="17" cy="17.5" rx="17" ry="17.5" fill="white" fill-opacity="0.47"/>
-                        <path d="M24.9999 17.5C24.9999 12.8145 21.1855 9 16.5 9C11.8144 9 8 12.8144 8 17.5V25.468C8 25.761 8.239 26 8.53198 26H16.5C21.1855 26 25 22.1856 25 17.5L24.9999 17.5ZM12.2507 15.9058C13.1276 15.9058 13.8449 16.623 13.8449 17.5C13.8449 18.3768 13.1276 19.0942 12.2507 19.0942C11.3738 19.0942 10.6565 18.3769 10.6565 17.5C10.6565 16.6231 11.3738 15.9058 12.2507 15.9058ZM22.3434 17.5C22.3434 18.3768 21.6261 19.0942 20.7492 19.0942C19.8723 19.0942 19.155 18.3769 19.155 17.5C19.155 16.6231 19.8723 15.9058 20.7492 15.9058C21.6261 15.9058 22.3434 16.623 22.3434 17.5ZM18.0942 17.5C18.0942 18.3768 17.377 19.0942 16.5 19.0942C15.6231 19.0942 14.9058 18.3769 14.9058 17.5C14.9058 16.6231 15.6231 15.9058 16.5 15.9058C17.3769 15.9058 18.0942 16.623 18.0942 17.5Z" fill="black"/>
-                    </svg>
-                    <span>Chat with Finlix</span>
-                </div>
-                <div class="card green">
-                    <svg width="34" height="35" viewBox="0 0 34 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <ellipse cx="17" cy="17.5" rx="17" ry="17.5" fill="white" fill-opacity="0.47"/>
-                        <path d="M20.3211 13.2241C20.0188 13.0469 19.7236 12.9573 19.4903 12.9573C19.2583 12.9573 19.0886 13.0469 19.0372 13.2241C18.9323 13.5788 19.3401 14.1536 19.9454 14.5084C20.2484 14.6862 20.5433 14.7748 20.7759 14.7748C21.0079 14.7748 21.1777 14.6862 21.2304 14.5084C21.3342 14.1536 20.9271 13.5788 20.3211 13.2241Z" fill="black" stroke="black"/>
-                        <path d="M15.5295 22.9591C15.3114 22.881 15.004 22.8655 14.6584 22.9307C13.9686 23.063 13.3924 23.4687 13.3711 23.8377C13.3603 24.022 13.4908 24.163 13.7099 24.2404C13.9287 24.3185 14.2364 24.3334 14.581 24.2678C15.2712 24.1366 15.8477 23.7311 15.869 23.3612C15.8798 23.1769 15.7493 23.0362 15.5295 22.9591Z" fill="black" stroke="black"/>
-                        <path d="M18.8677 22.2081C18.6493 22.1307 18.3409 22.1144 17.9967 22.1804C17.3072 22.3119 16.7313 22.7167 16.71 23.0866C16.6999 23.2713 16.83 23.4116 17.0488 23.4894C17.2676 23.5671 17.5757 23.5824 17.9199 23.5174C18.6108 23.3856 19.1853 22.9804 19.2073 22.6108C19.2167 22.4262 19.0869 22.2862 18.8677 22.2081Z" fill="black" stroke="black"/>
-                        <path d="M22.068 21.5541C21.8499 21.4767 21.5412 21.4611 21.1963 21.5267C20.5075 21.6583 19.9309 22.0634 19.9103 22.4333C19.9001 22.6176 20.03 22.7583 20.2491 22.8361C20.4676 22.9138 20.776 22.929 21.1209 22.8634C21.811 22.7319 22.3862 22.3268 22.4075 21.9575C22.4177 21.7726 22.2872 21.6322 22.068 21.5541Z" fill="black" stroke="black"/>
-                        <path d="M12.9088 15.5658C12.7262 15.7091 12.5487 15.9614 12.4188 16.2881C12.1612 16.9414 12.1957 17.6441 12.4956 17.8595C12.6464 17.967 12.8351 17.9328 13.0177 17.7895C13.2013 17.6461 13.3789 17.3938 13.508 17.0675C13.7657 16.4145 13.7315 15.7108 13.4313 15.4954C13.2808 15.3879 13.0918 15.422 12.9088 15.5658Z" fill="black" stroke="black"/>
-                        <path d="M9.18913 14.4333C9.00551 14.5767 8.82798 14.8283 8.69881 15.1549C8.44046 15.8079 8.47461 16.5116 8.77624 16.7263C8.92571 16.8342 9.1144 16.7993 9.29801 16.656C9.48062 16.5126 9.65815 16.2607 9.78732 15.934C10.0457 15.2814 10.0112 14.5777 9.71056 14.3619C9.56042 14.2547 9.37173 14.2892 9.18913 14.4333Z" fill="black" stroke="black"/>
-                        <path d="M26.5404 18.7589L24.3238 12.0743C23.9891 11.0646 22.9361 10.0106 21.9257 9.67582L15.2404 7.45922C14.8231 7.32092 14.4481 7.3216 14.1593 7.45787C13.8468 7.54275 13.4898 7.67733 13.1239 7.84776C12.6237 8.08075 12.007 8.43479 11.7452 8.74285C11.7158 8.7681 11.6873 8.79438 11.6597 8.82164L7.1761 13.3062C6.47917 14.0028 6.16908 15.3284 6.47038 16.3242L8.41882 22.7776C8.45432 22.8956 8.49828 23.0068 8.54968 23.1086C8.70658 23.5861 9.34975 24.2553 9.54723 24.4528C9.74539 24.6506 10.4156 25.2954 10.8931 25.452C10.9945 25.5024 11.1058 25.5464 11.2231 25.5819L17.6761 27.5303C17.9263 27.6064 18.2012 27.6446 18.4937 27.6446C19.332 27.6446 20.1957 27.3227 20.6934 26.8249L25.178 22.34C25.2064 22.3116 25.2321 22.2832 25.2571 22.2544C25.5655 21.9917 25.9196 21.3749 26.1519 20.8765C26.3233 20.5089 26.4579 20.1508 26.5428 19.838C26.6794 19.5475 26.6787 19.1755 26.5404 18.7589ZM9.5709 23.508C9.32507 23.209 9.19488 22.9875 9.16884 22.8956L9.14382 22.8333C9.10352 22.755 9.07069 22.673 9.04575 22.5885L7.09664 16.1349C6.86703 15.3757 7.11524 14.2923 7.6387 13.7692L12.1233 9.28424C12.1463 9.2609 12.1706 9.24061 12.194 9.22032L12.2372 9.17501C12.3137 9.0783 12.5209 8.92072 12.8185 8.74556C13.1022 8.83517 13.3437 9.10299 13.4745 9.53785L15.423 15.9915C15.6881 16.8683 15.4088 18.0742 14.7991 18.6839L10.3152 23.1685C10.071 23.4123 9.81201 23.5181 9.5709 23.508ZM24.824 21.7631L24.7776 21.8081C24.7577 21.8311 24.7381 21.8544 24.7147 21.8774L20.2308 26.3623C19.8555 26.7377 19.1572 26.9896 18.4941 26.9896C18.2815 26.9919 18.0693 26.9629 17.8651 26.9037L11.4121 24.9553C11.3277 24.9301 11.2457 24.8971 11.1673 24.8569L11.1048 24.8325C11.0131 24.8068 10.7916 24.6759 10.4927 24.4301C10.4822 24.1887 10.5874 23.93 10.8319 23.6855L15.3154 19.2012C15.9255 18.5912 17.1307 18.3119 18.0078 18.577L24.4608 20.5258C24.8963 20.6573 25.1642 20.8991 25.2534 21.1828C25.0789 21.4797 24.9207 21.6863 24.824 21.7631ZM25.9446 19.5719L25.9189 19.6395C25.8871 19.7602 25.8435 19.8941 25.7931 20.0328C25.6115 20.0676 25.3883 20.0487 25.1297 19.9628L18.4447 17.7462C17.5358 17.4452 16.5544 16.4639 16.2542 15.5553L14.0376 8.87034C13.952 8.61165 13.9327 8.38881 13.9676 8.20688C14.1055 8.15717 14.2384 8.11355 14.3588 8.08176L14.4275 8.05505C14.486 8.02462 14.5614 8.00906 14.6517 8.00906C14.7639 8.00906 14.8928 8.03307 15.0351 8.08007L21.7201 10.2967C22.5276 10.5645 23.4352 11.4728 23.7027 12.2799L25.9196 18.9645C26.0034 19.2195 26.0129 19.4403 25.9446 19.5719Z" fill="black" stroke="black"/>
-                    </svg>
-                    <span>Play a game</span>
-                </div>
-            </div>
-            <div class="footer">
-                <a href="https://leapthelimit.com" target="_blank" style="color: #767676; text-decoration: none;">
-                    Powered by LeapTheLimit AI
-                </a>
-            </div>
-        </div>
-    `;
-
     const widgetStyles = `
         #assistant-widget {
-            width: 320px; /* Adjusted width */
-            height: 563px; /* Adjusted height */
+            width: 320px;
+            height: 563px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -230,11 +89,158 @@
         .language-menu button:hover {
             background-color: #555;
         }
+        .finlix-container {
+            border-radius: 25px;
+            background-color: #000;
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+        .brand-name {
+            justify-content: center;
+            border-radius: 18px;
+            border: none;
+            background-color: rgba(199, 54, 217, 0);
+            color: #fff;
+            white-space: nowrap;
+            padding: 6.4px 12.8px;
+            font: 500 11.2px/112% Inter, sans-serif;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .brand-name svg {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .powered-by {
+            color: #767676;
+            margin-top: 8px;
+            font: 300 9.6px/112% Inter, sans-serif;
+        }
+        .powered-by a {
+            color: #767676;
+            text-decoration: none;
+        }
+        .powered-by a:hover {
+            text-decoration: underline;
+        }
+        .shape-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 16px;
+            position: relative;
+            width: 100%;
+            height: 240px;
+        }
+        .shape {
+            position: absolute;
+        }
+        .circle {
+            border-radius: 50%;
+            position: absolute;
+            animation: breathe 3s infinite;
+        }
+        .circle-listening {
+            animation: heartbeat 1s infinite;
+        }
+        .purple-circle {
+            background-color: #c736d9;
+            width: 103.2px;
+            height: 107.2px;
+            left: calc(50% - 84px);
+            top: calc(50% - 80px);
+        }
+        .blue-circle {
+            background-color: #bcd8fa;
+            width: 54.4px;
+            height: 54.4px;
+            left: calc(50% + 32px);
+            top: calc(50% - 64px);
+        }
+        .green-circle {
+            background-color: #9aed66;
+            width: 72px;
+            height: 68.8px;
+            left: calc(50% + 16px);
+            top: calc(50% + 8px);
+        }
+        .gray-circle {
+            background-color: #d9d9d9;
+            width: 48.8px;
+            height: 46.4px;
+            left: calc(50% - 48px);
+            top: calc(64% + 40px);
+        }
+        .question-text {
+            color: #c3c3c3;
+            margin-top: 16px;
+            font: 400 22.4px/28.8px Inter, sans-serif;
+            text-align: center;
+        }
+        .icon-container {
+            display: flex;
+            margin-top: 16px;
+            align-items: center;
+            gap: 24px;
+            justify-content: space-around;
+            width: 100%;
+            padding: 16px;
+            position: absolute;
+            bottom: 16px;
+        }
+        .icon {
+            width: 36px;
+            cursor: pointer;
+        }
+        .icon-large {
+            width: 56px;
+            cursor: pointer;
+        }
+        .icon-bordered {
+            width: 36px;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 1px solid #6b6b6b;
+        }
+        .history-box {
+            display: none;
+            position: fixed;
+            bottom: 8%;
+            right: 8%;
+            width: 240px;
+            height: 320px;
+            background-color: #333;
+            color: white;
+            padding: 16px;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+        .close-button {
+            background-color: #c736d9;
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 5px;
+            float: right;
+        }
+        .history-entry {
+            margin-bottom: 8px;
+        }
+        .widget-home, .widget-talk {
+            display: none;
+        }
     `;
 
-    const widgetHTML = `
-        <div id="assistant-widget">
-            <section class="finlix-container">
+    const homePageHTML = `
+        <div class="widget-home" id="widget-home">
+            <div class="finlix-container">
                 <h1 class="brand-name">
                     <svg width="54" height="29" viewBox="0 0 67 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect x="0.5" y="0.5" width="66" height="35" rx="17.5" stroke="url(#paint0_linear_37_323)"/>
@@ -259,8 +265,48 @@
                 <h2 class="question-text">How can I help you?</h2>
                 <div class="icon-container">
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b5c24373f8dd5ef5131c67177bccdbef574bf3f9ed5118f4e197ea82589a22df?apiKey=6ff838e322054338a5da6863c2494c61&" alt="History Icon" class="icon" onclick="toggleHistory()" />
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/95dad8e994e6b876df822e962cfc87ce2b5a9d7d32d644beda1bacf1554332cc?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Microphone Icon" class="icon-large" onclick="showTalkWidget()" />
+                    <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon" onclick="toggleLanguageMenu()">
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
+                        <path d="M14.5 23.1667C19.3325 23.1667 23.25 19.0626 23.25 14C23.25 8.9374 19.3325 4.83334 14.5 4.83334C9.66751 4.83334 5.75 8.9374 5.75 14C5.75 19.0626 9.66751 23.1667 14.5 23.1667Z" stroke="white" stroke-linecap="square"/>
+                        <path d="M14.5 23.1667C16.8333 20.9445 18 17.8889 18 14C18 10.1111 16.8333 7.05557 14.5 4.83334C12.1667 7.05557 11 10.1111 11 14C11 17.8889 12.1667 20.9445 14.5 23.1667Z" stroke="white" stroke-linecap="round"/>
+                        <path d="M6.1875 11.25H22.8125M6.1875 16.75H22.8125" stroke="white" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="language-menu" id="languageMenu">
+                    <button onclick="setLanguage('ar')">Arabic</button>
+                    <button onclick="setLanguage('en')">English</button>
+                    <button onclick="setLanguage('he')">Hebrew</button>
+                </div>
+            </div>
+            <div class="history-box" id="historyBox">
+                <button class="close-button" onclick="toggleHistory()">Close</button>
+                <div id="historyContent"></div>
+            </div>
+        </div>
+    `;
+
+    const talkPageHTML = `
+        <div class="widget-talk" id="widget-talk">
+            <section class="finlix-container">
+                <h1 class="brand-name">Finlix</h1>
+                <p class="powered-by"><a href="https://leapthelimit.com" target="_blank">Powered by LeapTheLimit</a></p>
+                <div class="shape-container">
+                    <div class="shape"><div class="circle purple-circle" aria-hidden="true"></div></div>
+                    <div class="shape"><div class="circle blue-circle" aria-hidden="true"></div></div>
+                    <div class="shape"><div class="circle green-circle" aria-hidden="true"></div></div>
+                    <div class="shape"><div class="circle gray-circle" aria-hidden="true"></div></div>
+                </div>
+                <h2 class="question-text">How can I help you?</h2>
+                <div class="icon-container">
+                    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/b5c24373f8dd5ef5131c67177bccdbef574bf3f9ed5118f4e197ea82589a22df?apiKey=6ff838e322054338a5da6863c2494c61&" alt="History Icon" class="icon" onclick="toggleHistory()" />
                     <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/95dad8e994e6b876df822e962cfc87ce2b5a9d7d32d644beda1bacf1554332cc?apiKey=6ff838e322054338a5da6863c2494c61&" alt="Microphone Icon" class="icon-large" onclick="startListening()" />
                     <svg width="29" height="29" viewBox="0 0 29 29" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon" onclick="toggleLanguageMenu()">
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
+                        <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
                         <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" fill="#272626"/>
                         <rect x="0.25" y="0.25" width="28.5" height="28.5" rx="13.75" stroke="#6B6B6B" stroke-width="0.5"/>
                         <path d="M14.5 23.1667C19.3325 23.1667 23.25 19.0626 23.25 14C23.25 8.9374 19.3325 4.83334 14.5 4.83334C9.66751 4.83334 5.75 8.9374 5.75 14C5.75 19.0626 9.66751 23.1667 14.5 23.1667Z" stroke="white" stroke-linecap="square"/>
@@ -278,15 +324,6 @@
                 <button class="close-button" onclick="toggleHistory()">Close</button>
                 <div id="historyContent"></div>
             </div>
-        </div>
-        <div id="widget-icon" onclick="toggleWidget()">
-            <svg width="69" height="70" viewBox="0 0 86 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="43" cy="44" rx="43" ry="44" fill="black"/>
-                <circle cx="32" cy="35" r="12" fill="#C736D9"/>
-                <circle cx="56" cy="55" r="9" fill="#9AED66"/>
-                <circle cx="37.5" cy="57.5" r="5.5" fill="#D9D9D9"/>
-                <circle cx="53.5" cy="35.5" r="6.5" fill="#BCD8FA"/>
-            </svg>
         </div>
     `;
 
@@ -373,8 +410,9 @@
     }
 
     function initWidget() {
-        loadStyles(homePageStyles);
-        loadHTML(homePageHTML, 'home-widget-container');
+        loadStyles(widgetStyles);
+        loadHTML(homePageHTML, 'widget-home-container');
+        loadHTML(talkPageHTML, 'widget-talk-container');
 
         const serverUrl = 'https://my-flask-app-mz4r7ctc7q-zf.a.run.app';
         const responseText = document.querySelector('.question-text');
@@ -425,6 +463,16 @@
 
         window.startListening = function() {
             recognition.start();
+        };
+
+        window.showTalkWidget = function() {
+            document.getElementById('widget-home').style.display = 'none';
+            document.getElementById('widget-talk').style.display = 'flex';
+        };
+
+        window.showHomeWidget = function() {
+            document.getElementById('widget-home').style.display = 'flex';
+            document.getElementById('widget-talk').style.display = 'none';
         };
 
         async function handleUserMessage(message) {
@@ -495,18 +543,6 @@
             loadStyles(widgetStyles);
             loadHTML(widgetHTML, 'assistant-widget-container');
         }
-
-        window.showMainWidget = function() {
-            const homeWidget = document.getElementById('home-widget-container');
-            const assistantWidget = document.getElementById('assistant-widget-container');
-
-            if (homeWidget) {
-                homeWidget.style.display = 'none';
-            }
-            if (assistantWidget) {
-                assistantWidget.style.display = 'flex';
-            }
-        };
 
         window.toggleHistory = function() {
             const historyBox = document.getElementById('historyBox');
