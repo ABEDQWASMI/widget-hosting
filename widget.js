@@ -592,12 +592,13 @@
             languageMenu.classList.toggle('active');
         };
 
-        window.setLanguage = function(lang) {
-            selectedLanguage = lang;
-            console.log(`Language set to: ${lang}`);
-            recognition.lang = lang === 'en' ? 'en-US' : lang === 'he' ? 'he-IL' : 'ar-SA';
-            toggleLanguageMenu();
-        };
+    window.setLanguage = function(lang) {
+    selectedLanguage = lang;
+    console.log(`Language set to: ${lang}`);
+    recognition.lang = lang === 'en' ? 'en-US' : lang === 'he' ? 'he-IL' : 'ar-SA';
+    toggleLanguageMenu();
+};
+
     }
 
     loadScript('https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js', initWidget);
