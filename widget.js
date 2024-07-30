@@ -178,32 +178,43 @@
         document.head.appendChild(script);
     }
 
-    async function handleUserMessage(message) {
-        try {
-            history.push({ user: message });
-            const chatResponse = await axios.post(`${serverUrl}/chat`, { message: message, language: selectedLanguage });
+async function handleUserMessage(message) {
+    try {
+        const chatResponse = await fetch('https://leapthelimit-mz4r7ctc7q-zf.a.run.app/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message: message, language: selectedLanguage })  // Pass selected language here
+        });
 
-            let response = chatResponse.data.response;
-            response = translateMathSymbols(response);
-            response = convertNumbersToWords(response);
-            displayRotatingText(response);
-            history.push({ bot: response });
+        const data = await chatResponse.json();
+        const response = data.response;
+        displayRotatingText(response);
 
-            const ttsResponse = await axios.post(`${serverUrl}/synthesize`, { text: response, language_code: selectedLanguage });
+        const ttsResponse = await fetch('https://leapthelimit-mz4r7ctc7q-zf.a.run.app/synthesize', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text: response, language_code: selectedLanguage })
+        });
 
-            const audioContent = ttsResponse.data.audioContent;
-            if (audioInstance) {
-                audioInstance.pause();
-            }
-            audioInstance = new Audio(`data:audio/mp3;base64,${audioContent}`);
-            audioInstance.play();
+        const ttsData = await ttsResponse.json();
+        const audioContent = ttsData.audioContent;
+        const audio = new Audio(`data:audio/mp3;base64,${audioContent}`);
+        audio.play();
 
-            await saveChatMessage(message, "general");
-        } catch (error) {
-            console.error('Error handling user message', error);
-            responseText.innerText = 'Error occurred while processing your message.';
-        }
+        // Save chat message
+        await saveChatMessage(message, "general");
+
+    } catch (error) {
+        console.error('Error handling user message', error);
+        const responseText = document.querySelector('.question-text');
+        responseText.innerText = 'Error occurred while processing your message.';
     }
+}
+
 
     function convertNumbersToWords(text) {
         const numberMap = {
