@@ -215,6 +215,7 @@
         }
     }
 
+
     async function saveChatMessage(message, category) {
         try {
             await fetch('https://leapthelimit-mz4r7ctc7q-zf.a.run.app/save-chat-message', {
